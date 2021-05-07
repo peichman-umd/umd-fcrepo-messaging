@@ -12,6 +12,11 @@ UMD Libraries Fedora Messaging Infrastructure
 * [umd-camel-processors](https://github.com/umd-lib/umd-camel-processors)
 * [umd-fcrepo-docker]
 
+## Camel Routes
+
+[Route definitions](activemq/conf/camel) (written in the
+[Camel Spring XML DSL]).
+
 ## Docker Image
 
 Built from the [OpenJDK 8 Docker base image](https://hub.docker.com/_/openjdk),
@@ -40,7 +45,7 @@ with [ActiveMQ 5.16.0](http://activemq.apache.org/activemq-5160-release) and
 Build the image:
 
 ```bash
-docker build -t docker.lib.umd.edu/fcrepo-messaging activemq
+docker build -t docker.lib.umd.edu/fcrepo-messaging .
 ```
 
 TODO: specify required environment to run this image
@@ -69,6 +74,7 @@ See the [LICENSE](LICENSE) file for license rights and limitations (Apache 2.0).
 
 [ActiveMQ]: https://activemq.apache.org/components/classic/
 [Camel]: https://camel.apache.org/
+[Camel Spring XML DSL]: https://camel.apache.org/components/latest/spring-summary.html 
 [umd-fcrepo-docker]: https://github.com/umd-lib/umd-fcrepo-docker
 [fixity Camel route]: activemq/conf/camel/fixity.xml
 [STOMP]: https://stomp.github.io/
