@@ -1,14 +1,14 @@
-# Dockerfile for the generating the ActiveMQ Docker image
+# Dockerfile for the generating the fcrepo-messaging Docker image
 #
 # To build:
 #
-# docker build -t docker.lib.umd.edu/fcrepo-activemq:<VERSION> -f Dockerfile .
+# docker build -t docker.lib.umd.edu/fcrepo-messaging:<VERSION> -f Dockerfile .
 #
 # where <VERSION> is the Docker image version to create.
 FROM maven:3.6.3-jdk-8-slim AS dependencies
 
 RUN mkdir -p /var/jars
-COPY pom.xml /var/jars
+COPY activemq/pom.xml /var/jars
 WORKDIR /var/jars
 
 # fetch JARs required for running the Camel routes, but exclude the org.slf4j
@@ -28,8 +28,8 @@ ENV ACTIVEMQ_MAX_DISK 16G
 
 COPY --from=dependencies /var/jars/target/dependency/*.jar $ACTIVEMQ_HOME/lib/optional/
 
-COPY conf/ $ACTIVEMQ_HOME/conf/
-COPY env $ACTIVEMQ_HOME/bin/env
+COPY activemq/conf $ACTIVEMQ_HOME/conf/
+COPY activemq/env $ACTIVEMQ_HOME/bin/env
 
 VOLUME /var/opt/activemq
 VOLUME /var/log/fixity
