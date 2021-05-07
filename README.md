@@ -12,28 +12,26 @@ UMD Libraries Fedora Messaging Infrastructure
 * [umd-camel-processors](https://github.com/umd-lib/umd-camel-processors)
 * [umd-fcrepo-docker]
 
-## ActiveMQ Docker Image
+## Docker Image
 
 Built from the [OpenJDK 8 Docker base image](https://hub.docker.com/_/openjdk),
-with [ActiveMQ 5.16.0](http://activemq.apache.org/activemq-5160-release).
+with [ActiveMQ 5.16.0](http://activemq.apache.org/activemq-5160-release) and
+[umd-camel-processors 1.0.0](https://github.com/umd-lib/umd-camel-processors/tree/1.0.0).
 
 [Dockerfile](activemq/Dockerfile)
 
-Create a persistent data volume, if needed:
+Build the image:
 
 ```bash
-docker volume create fcrepo-activemq-data
+docker build -t docker.lib.umd.edu/fcrepo-messaging activemq
 ```
 
-Build and run this image.
+TODO: specify required environment to run this image
 
 ```bash
-cd activemq
-docker build -t docker.lib.umd.edu/fcrepo-activemq .
-docker run -it --rm --name fcrepo-activemq \
+docker run -it --rm --name fcrepo-messaging \
     -p 61616:61616 -p 61613:61613 -p 8161:8161 \
-    -v fcrepo-activemq-data:/var/opt/activemq \
-    docker.lib.umd.edu/fcrepo-activemq
+    docker.lib.umd.edu/fcrepo-messaging
 ```
 
 The ActiveMQ web admin console will be at <http://localhost:8161/admin/>
@@ -43,7 +41,9 @@ The ActiveMQ web admin console will be at <http://localhost:8161/admin/>
 
 ## History
 
-This code comes from the [activemq](https://github.com/umd-lib/umd-fcrepo-docker/tree/1.0.1/activemq) subdirectory of the [umd-fcrepo-docker] project at the 1.0.1 release.
+This code comes from the
+[activemq](https://github.com/umd-lib/umd-fcrepo-docker/tree/1.0.1/activemq)
+subdirectory of the [umd-fcrepo-docker] project at the 1.0.1 release.
 
 ## License
 
