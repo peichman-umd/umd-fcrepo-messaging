@@ -68,12 +68,18 @@
     <!--
     Expected headers:
     * CamelFcrepoPath
+    * CamelFcrepoResourceType
     -->
     <route id="edu.umd.lib.camel.routes.BatchEvents">
       <from uri="direct:batch"/>
       <filter>
         <simple>${header.CamelFcrepoPath} contains '#'</simple>
         <log loggingLevel="DEBUG" message="URI with fragment detected. Suppressing '${header.CamelFcrepoUri}' node event for batch user."/>
+        <stop/>
+      </filter>
+      <filter>
+        <simple>${header.CamelFcrepoResourceType} contains 'http://pcdm.org/models#Collection'</simple>
+        <log loggingLevel="DEBUG" message="Collection resource detected. Suppressing '${header.CamelFcrepoUri}' node event for batch user."/>
         <stop/>
       </filter>
       <setHeader headerName="JMSPriority">
