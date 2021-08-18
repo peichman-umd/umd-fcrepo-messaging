@@ -19,11 +19,10 @@ UMD Libraries Fedora Messaging Infrastructure
 
 ## Docker Image
 
-Built from the [OpenJDK 8 Docker base image](https://hub.docker.com/_/openjdk),
-with [ActiveMQ 5.16.0](http://activemq.apache.org/activemq-5160-release) and
-[umd-camel-processors 1.0.0](https://github.com/umd-lib/umd-camel-processors/tree/1.0.0).
+This repository contains a [Dockerfile](Dockerfile) for creating a Docker image.
 
-[Dockerfile](Dockerfile)
+This image is based on the [OpenJDK 8 Docker base image], and runs
+[ActiveMQ 5.16.0] with [umd-camel-processors 1.0.0].
 
 ### Volumes
 
@@ -42,16 +41,24 @@ with [ActiveMQ 5.16.0](http://activemq.apache.org/activemq-5160-release) and
 
 ### Build
 
-Build the image:
+The [POM file](pom.xml) includes the [fabric8io docker-maven-plugin], so 
+creating the image is as simple as running:
 
 ```bash
-docker build -t docker.lib.umd.edu/fcrepo-messaging .
+mvn docker:build
 ```
+
+The resulting image will be tagged as `docker.lib.umd.edu/fcrepo-messaging`,
+plus a version string. If the `project.version` property defined in the POM
+file is a SNAPSHOT, the version string will be "latest". Otherwise, it will
+be the `project.version` property value from the POM file.
+
+### Run
 
 TODO: specify required environment to run this image
 
 ```bash
-docker run -it --rm --name fcrepo-messaging \
+docker run -it --rm --name docker.lib.umd.edu/fcrepo-messaging \
     -p 61616:61616 -p 61613:61613 -p 8161:8161 \
     docker.lib.umd.edu/fcrepo-messaging
 ```
@@ -79,3 +86,6 @@ See the [LICENSE](LICENSE) file for license rights and limitations (Apache 2.0).
 [fixity Camel route]: activemq/conf/camel/fixity.xml
 [STOMP]: https://stomp.github.io/
 [OpenWire]: https://activemq.apache.org/openwire.html
+[OpenJDK 8 Docker base image]: https://hub.docker.com/_/openjdk
+[ActiveMQ 5.16.0]: https://activemq.apache.org/activemq-5016000-release
+[umd-camel-processors 1.0.0]: https://github.com/umd-lib/umd-camel-processors/tree/1.0.0

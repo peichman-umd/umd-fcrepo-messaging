@@ -8,7 +8,7 @@
 FROM maven:3.6.3-jdk-8-slim AS dependencies
 
 RUN mkdir -p /var/jars
-COPY activemq/pom.xml /var/jars
+COPY pom.xml /var/jars
 WORKDIR /var/jars
 
 # fetch JARs required for running the Camel routes, but exclude the org.slf4j
