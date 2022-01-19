@@ -36,6 +36,7 @@ This image is based on the [OpenJDK 8 Docker base image], and runs
 |Port number|Purpose|
 |-----------|-------|
 |8161       |ActiveMQ web admin console|
+|11099      |[JMX] remote connection|
 |61613      |[STOMP] messaging|
 |61616      |[OpenWire] messaging|
 
@@ -89,3 +90,5 @@ See the [LICENSE](LICENSE) file for license rights and limitations (Apache 2.0).
 [OpenJDK 8 Docker base image]: https://hub.docker.com/_/openjdk
 [ActiveMQ 5.16.0]: https://activemq.apache.org/activemq-5016000-release
 [umd-camel-processors 1.0.0]: https://github.com/umd-lib/umd-camel-processors/tree/1.0.0
+[fabric8io docker-maven-plugin]: https://dmp.fabric8.io/
+[JMX]: https://activemq.apache.org/jmx#activemq-mbeans-reference

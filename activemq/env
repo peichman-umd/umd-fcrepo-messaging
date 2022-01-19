@@ -48,7 +48,7 @@ fi
 # This enables jmx access over a configured jmx-tcp-port.
 # You have to configure the first four settings if you run a ibm jvm, caused by the
 # fact that IBM's jvm does not support VirtualMachine.attach(PID).
-# JMX access is needed for quering a running activemq instance to gain data or to
+# JMX access is needed for querying a running activemq instance to gain data or to
 # trigger management operations.
 #
 # Example for ${ACTIVEMQ_CONF}/jmx.access:
@@ -67,10 +67,11 @@ fi
 # controlRole abcd1234
 # ---
 #
-# ACTIVEMQ_SUNJMX_START="$ACTIVEMQ_SUNJMX_START -Dcom.sun.management.jmxremote.port=11099 "
+ACTIVEMQ_SUNJMX_START="$ACTIVEMQ_SUNJMX_START -Dcom.sun.management.jmxremote.port=11099"
 # ACTIVEMQ_SUNJMX_START="$ACTIVEMQ_SUNJMX_START -Dcom.sun.management.jmxremote.password.file=${ACTIVEMQ_CONF}/jmx.password"
 # ACTIVEMQ_SUNJMX_START="$ACTIVEMQ_SUNJMX_START -Dcom.sun.management.jmxremote.access.file=${ACTIVEMQ_CONF}/jmx.access"
-# ACTIVEMQ_SUNJMX_START="$ACTIVEMQ_SUNJMX_START -Dcom.sun.management.jmxremote.ssl=false"
+ACTIVEMQ_SUNJMX_START="$ACTIVEMQ_SUNJMX_START -Dcom.sun.management.jmxremote.ssl=false"
+ACTIVEMQ_SUNJMX_START="$ACTIVEMQ_SUNJMX_START -Dcom.sun.management.jmxremote.authenticate=false"
 ACTIVEMQ_SUNJMX_START="$ACTIVEMQ_SUNJMX_START -Dcom.sun.management.jmxremote"
 
 # Set jvm jmx configuration for controlling the broker process
