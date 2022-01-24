@@ -76,7 +76,7 @@
     * repoExternalURL : java.net.URL
     -->
     <route id="edu.umd.lib.camel.routes.FixityChecker">
-      <from uri="activemq:queue:fixity"/>
+      <from uri="activemq:queue:fedorafixity"/>
       <setHeader headerName="CamelHttpUri">
         <simple>${sysenv.REPO_INTERNAL_URL}${header.CamelFcrepoPath}</simple>
       </setHeader>
