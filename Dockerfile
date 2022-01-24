@@ -33,9 +33,15 @@ COPY activemq/env $ACTIVEMQ_HOME/bin/env
 
 VOLUME /var/opt/activemq
 VOLUME /var/log/fixity
+
+# STOMP
 EXPOSE 61613
+# OpenWire
 EXPOSE 61616
+# HTTP admin console
 EXPOSE 8161
+# JMX
+EXPOSE 11099
 
 WORKDIR $ACTIVEMQ_HOME
 CMD ["bin/activemq", "console"]
