@@ -5,12 +5,30 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>edu.umd.lib</groupId>
-  <artifactId>umd-fcrepo_activemq</artifactId>
-  <version>1.0.0-SNAPSHOT</version>
-  <description>
-    This POM file is used to pull in the Java dependencies for the Camel routes
-    defined in the conf/camel/*.xml files.
-  </description>
+  <artifactId>umd-fcrepo-messaging</artifactId>
+  <name>UMD Fedora Repository Messaging Infrastructure</name>
+  <description>The Fedora messaging infrastructure</description>
+  <version>1.0.4</version>
+
+  <properties>
+    <camel.version>2.25.2</camel.version>
+    <fcrepo-camel.version>4.5.0</fcrepo-camel.version>
+    <postgresql.version>42.2.16</postgresql.version>
+    <umd-camel-processors.version>1.0.1</umd-camel-processors.version>
+  </properties>
+
+  <distributionManagement>
+    <repository>
+      <id>nexus</id>
+      <name>Releases</name>
+      <url>https://maven.lib.umd.edu/nexus/content/repositories/releases</url>
+    </repository>
+    <snapshotRepository>
+      <id>nexus</id>
+      <name>Snapshots</name>
+      <url>https://maven.lib.umd.edu/nexus/content/repositories/snapshots</url>
+    </snapshotRepository>
+  </distributionManagement>
 
   <repositories>
     <repository>
@@ -40,13 +58,6 @@
       </snapshots>
     </repository>
   </repositories>
-
-  <properties>
-    <camel.version>2.25.2</camel.version>
-    <fcrepo-camel.version>4.5.0</fcrepo-camel.version>
-    <postgresql.version>42.2.16</postgresql.version>
-    <umd-camel-processors.version>1.0.0</umd-camel-processors.version>
-  </properties>
 
   <dependencies>
     <!-- PostgreSQL -->
