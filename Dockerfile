@@ -26,6 +26,11 @@ ENV ACTIVEMQ_HOME /opt/apache-activemq-${ACTIVEMQ_VERSION}
 ENV ACTIVEMQ_DATA /var/opt/activemq
 ENV ACTIVEMQ_MAX_DISK 16G
 
+# remove httpclient 4.5.11 that is bundled with ActiveMQ, because we need to
+# make sure we are using 4.5.12+ to properly follow 308 redirects
+# use the "-f" flag to avoid failing the build if the file doesn't exist
+RUN rm -f $ACTIVEMQ_HOME/lib/optional/httpclient-4.5.11.jar
+
 COPY --from=dependencies /var/jars/target/dependency/*.jar $ACTIVEMQ_HOME/lib/optional/
 
 COPY activemq/conf $ACTIVEMQ_HOME/conf/
