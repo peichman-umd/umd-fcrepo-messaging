@@ -5,7 +5,7 @@
 # docker build -t docker.lib.umd.edu/fcrepo-messaging:<VERSION> -f Dockerfile .
 #
 # where <VERSION> is the Docker image version to create.
-FROM maven:3.6.3-jdk-8-slim AS dependencies
+FROM maven:3.8.6-eclipse-temurin-11 AS dependencies
 
 RUN mkdir -p /var/jars
 COPY pom.xml /var/jars
@@ -16,11 +16,20 @@ WORKDIR /var/jars
 # also http://www.slf4j.org/codes.html#log4jDelegationLoop
 RUN mvn dependency:copy-dependencies -DexcludeGroupIds=org.slf4j,ch.qos.logback
 
-FROM openjdk:8u265-jdk-buster
+FROM openjdk:8u312-jdk-bullseye
 
 ENV ACTIVEMQ_VERSION 5.16.0
-RUN curl -Ls http://archive.apache.org/dist/activemq/${ACTIVEMQ_VERSION}/apache-activemq-${ACTIVEMQ_VERSION}-bin.tar.gz \
-    | tar xvzf - --directory /opt
+ENV ACTIVEMQ_URL http://archive.apache.org/dist/activemq/${ACTIVEMQ_VERSION}/apache-activemq-${ACTIVEMQ_VERSION}-bin.tar.gz
+
+# Download and install ActiveMQ.
+# We need to run this as three separate commands instead of a single
+# "curl ... | tar xvzf - ..." pipeline due to some problems with how
+# QEMU handles pipes and sub-processes when running multi-platform
+# Docker builds on Kubernetes.
+RUN curl -Ls "$ACTIVEMQ_URL" -o /tmp/activemq.tar.gz
+RUN gzip -d /tmp/activemq.tar.gz
+RUN tar xvf /tmp/activemq.tar --directory /opt
+RUN rm /tmp/activemq.tar
 
 ENV ACTIVEMQ_HOME /opt/apache-activemq-${ACTIVEMQ_VERSION}
 ENV ACTIVEMQ_DATA /var/opt/activemq
