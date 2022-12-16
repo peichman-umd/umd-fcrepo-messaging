@@ -1,0 +1,488 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+      
+      
+        <link rel="canonical" href="https://umd-lib.github.io/umd-fcrepo-messaging/contexts/indexing/triplestore/">
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.4.2, mkdocs-material-8.5.10">
+    
+    
+      
+        <title>Triplestore Indexing - UMD Libraries Fedora Messaging Infrastructure</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.975780f9.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.2505c338.min.css">
+        
+      
+      
+
+    
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce((e,_)=>(e<<5)-e+_.charCodeAt(0),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+    
+  </head>
+  
+  
+    
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="None" data-md-color-accent="None">
+  
+    
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#camel-contexts-triplestore-indexing" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="UMD Libraries Fedora Messaging Infrastructure" class="md-header__button md-logo" aria-label="UMD Libraries Fedora Messaging Infrastructure" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3V6m0 5h18v2H3v-2m0 5h18v2H3v-2Z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            UMD Libraries Fedora Messaging Infrastructure
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Triplestore Indexing
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+    
+    
+      <label class="md-header__button md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+      </label>
+      <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.516 6.516 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5Z"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12 19 6.41Z"/></svg>
+        </button>
+      </nav>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+    
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="UMD Libraries Fedora Messaging Infrastructure" class="md-nav__button md-logo" aria-label="UMD Libraries Fedora Messaging Infrastructure" data-md-component="logo">
+      
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a3 3 0 0 0 3-3 3 3 0 0 0-3-3 3 3 0 0 0-3 3 3 3 0 0 0 3 3m0 3.54C9.64 9.35 6.5 8 3 8v11c3.5 0 6.64 1.35 9 3.54 2.36-2.19 5.5-3.54 9-3.54V8c-3.5 0-6.64 1.35-9 3.54Z"/></svg>
+
+    </a>
+    UMD Libraries Fedora Messaging Infrastructure
+  </label>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        Home
+      </a>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2" type="checkbox" id="__nav_2" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2">
+          Camel Contexts
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Camel Contexts" data-md-level="1">
+        <label class="md-nav__title" for="__nav_2">
+          <span class="md-nav__icon md-icon"></span>
+          Camel Contexts
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../" class="md-nav__link">
+        Overview
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../routing/" class="md-nav__link">
+        Routing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../auditing/" class="md-nav__link">
+        Auditing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../fixity/" class="md-nav__link">
+        Fixity Checking
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+      
+        <input class="md-nav__toggle md-toggle" data-md-toggle="__nav_2_5" type="checkbox" id="__nav_2_5" checked>
+      
+      
+      
+      
+        <label class="md-nav__link" for="__nav_2_5">
+          Indexing
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <nav class="md-nav" aria-label="Indexing" data-md-level="2">
+        <label class="md-nav__title" for="__nav_2_5">
+          <span class="md-nav__icon md-icon"></span>
+          Indexing
+        </label>
+        <ul class="md-nav__list" data-md-scrollfix>
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../" class="md-nav__link">
+        Indexing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../solr/" class="md-nav__link">
+        Solr Indexing
+      </a>
+    </li>
+  
+
+            
+          
+            
+              
+  
+  
+    
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" data-md-toggle="toc" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        Triplestore Indexing
+      </a>
+      
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+            
+          
+        </ul>
+      </nav>
+    </li>
+  
+
+    
+      
+      
+      
+
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="https://github.com/umd-lib/umd-fcrepo-messaging" class="md-nav__link">
+        GitHub
+      </a>
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+<h1 id="camel-contexts-triplestore-indexing">Camel Contexts: Triplestore Indexing</h1>
+<p><svg contentStyleType="text/css" preserveAspectRatio="none" style="background:#FFFFFF" version="1.1" viewBox="0 0 1316 508" width="100%" zoomAndPan="magnify" class="uml" alt="uml diagram" title=""><defs /><g><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="72" x2="72" y1="69.9766" y2="441.7031" /><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="303" x2="303" y1="69.9766" y2="441.7031" /><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="414" x2="414" y1="69.9766" y2="441.7031" /><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="628.5" x2="628.5" y1="69.9766" y2="441.7031" /><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="805.5" x2="805.5" y1="69.9766" y2="441.7031" /><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="981.5" x2="981.5" y1="69.9766" y2="441.7031" /><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="1179.5" x2="1179.5" y1="69.9766" y2="441.7031" /><line style="stroke:#181818;stroke-width:0.5;stroke-dasharray:5.0,5.0;" x1="1289.5" x2="1289.5" y1="69.9766" y2="441.7031" /><path d="M10,43.4883 L134,43.4883 C139,43.4883 139,56.7324 139,56.7324 C139,56.7324 139,69.9766 134,69.9766 L10,69.9766 C5,69.9766 5,56.7324 5,56.7324 C5,56.7324 5,43.4883 10,43.4883 " fill="#E2E2F0" style="stroke:#181818;stroke-width:0.5;" /><path d="M134,43.4883 C129,43.4883 129,56.7324 129,56.7324 C129,69.9766 134,69.9766 134,69.9766 " fill="none" style="stroke:#181818;stroke-width:0.5;" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="114" x="10" y="62.0234">index.triplestore</text><path d="M10,440.7031 L134,440.7031 C139,440.7031 139,453.9473 139,453.9473 C139,453.9473 139,467.1914 134,467.1914 L10,467.1914 C5,467.1914 5,453.9473 5,453.9473 C5,453.9473 5,440.7031 10,440.7031 " fill="#E2E2F0" style="stroke:#181818;stroke-width:0.5;" /><path d="M134,440.7031 C129,440.7031 129,453.9473 129,453.9473 C129,467.1914 134,467.1914 134,467.1914 " fill="none" style="stroke:#181818;stroke-width:0.5;" /><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="114" x="10" y="459.2383">index.triplestore</text><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="54" x="273" y="50.5352">&#171;Route&#187;</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="136" x="232" y="67.0234">TriplestoreIndexing</text><ellipse cx="303" cy="21" fill="#E2E2F0" rx="12" ry="12" style="stroke:#181818;stroke-width:0.5;" /><polygon fill="#181818" points="299,9,305,4,303,9,305,14,299,9" style="stroke:#181818;stroke-width:1.0;" /><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="54" x="273" y="454.2383">&#171;Route&#187;</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="136" x="232" y="470.7266">TriplestoreIndexing</text><ellipse cx="303" cy="489.6797" fill="#E2E2F0" rx="12" ry="12" style="stroke:#181818;stroke-width:0.5;" /><polygon fill="#181818" points="299,477.6797,305,472.6797,303,477.6797,305,482.6797,299,477.6797" style="stroke:#181818;stroke-width:1.0;" /><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="54" x="384" y="50.5352">&#171;Route&#187;</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="50" x="386" y="67.0234">GetRDF</text><ellipse cx="414" cy="21" fill="#E2E2F0" rx="12" ry="12" style="stroke:#181818;stroke-width:0.5;" /><polygon fill="#181818" points="410,9,416,4,414,9,416,14,410,9" style="stroke:#181818;stroke-width:1.0;" /><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="54" x="384" y="454.2383">&#171;Route&#187;</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="50" x="386" y="470.7266">GetRDF</text><ellipse cx="414" cy="489.6797" fill="#E2E2F0" rx="12" ry="12" style="stroke:#181818;stroke-width:0.5;" /><polygon fill="#181818" points="410,477.6797,416,472.6797,414,477.6797,416,482.6797,410,477.6797" style="stroke:#181818;stroke-width:1.0;" /><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="54" x="599" y="50.5352">&#171;Route&#187;</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="159" x="546.5" y="67.0234">IndexTriplestoreCreate</text><ellipse cx="629" cy="21" fill="#E2E2F0" rx="12" ry="12" style="stroke:#181818;stroke-width:0.5;" /><polygon fill="#181818" points="625,9,631,4,629,9,631,14,625,9" style="stroke:#181818;stroke-width:1.0;" /><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="54" x="599" y="454.2383">&#171;Route&#187;</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="159" x="546.5" y="470.7266">IndexTriplestoreCreate</text><ellipse cx="629" cy="489.6797" fill="#E2E2F0" rx="12" ry="12" style="stroke:#181818;stroke-width:0.5;" /><polygon fill="#181818" points="625,477.6797,631,472.6797,629,477.6797,631,482.6797,625,477.6797" style="stroke:#181818;stroke-width:1.0;" /><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="54" x="776" y="50.5352">&#171;Route&#187;</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="163" x="721.5" y="67.0234">IndexTriplestoreUpdate</text><ellipse cx="806" cy="21" fill="#E2E2F0" rx="12" ry="12" style="stroke:#181818;stroke-width:0.5;" /><polygon fill="#181818" points="802,9,808,4,806,9,808,14,802,9" style="stroke:#181818;stroke-width:1.0;" /><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="54" x="776" y="454.2383">&#171;Route&#187;</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="163" x="721.5" y="470.7266">IndexTriplestoreUpdate</text><ellipse cx="806" cy="489.6797" fill="#E2E2F0" rx="12" ry="12" style="stroke:#181818;stroke-width:0.5;" /><polygon fill="#181818" points="802,477.6797,808,472.6797,806,477.6797,808,482.6797,802,477.6797" style="stroke:#181818;stroke-width:1.0;" /><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="54" x="952" y="50.5352">&#171;Route&#187;</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="157" x="900.5" y="67.0234">IndexTriplestoreDelete</text><ellipse cx="982" cy="21" fill="#E2E2F0" rx="12" ry="12" style="stroke:#181818;stroke-width:0.5;" /><polygon fill="#181818" points="978,9,984,4,982,9,984,14,978,9" style="stroke:#181818;stroke-width:1.0;" /><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="54" x="952" y="454.2383">&#171;Route&#187;</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="157" x="900.5" y="470.7266">IndexTriplestoreDelete</text><ellipse cx="982" cy="489.6797" fill="#E2E2F0" rx="12" ry="12" style="stroke:#181818;stroke-width:0.5;" /><polygon fill="#181818" points="978,477.6797,984,472.6797,982,477.6797,984,482.6797,978,477.6797" style="stroke:#181818;stroke-width:1.0;" /><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="54" x="1150" y="50.5352">&#171;Route&#187;</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="143" x="1105.5" y="67.0234">IndexTriplestoreHttp</text><ellipse cx="1180" cy="21" fill="#E2E2F0" rx="12" ry="12" style="stroke:#181818;stroke-width:0.5;" /><polygon fill="#181818" points="1176,9,1182,4,1180,9,1182,14,1176,9" style="stroke:#181818;stroke-width:1.0;" /><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="54" x="1150" y="454.2383">&#171;Route&#187;</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="143" x="1105.5" y="470.7266">IndexTriplestoreHttp</text><ellipse cx="1180" cy="489.6797" fill="#E2E2F0" rx="12" ry="12" style="stroke:#181818;stroke-width:0.5;" /><polygon fill="#181818" points="1176,477.6797,1182,472.6797,1180,477.6797,1182,482.6797,1176,477.6797" style="stroke:#181818;stroke-width:1.0;" /><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="36" x="1268.5" y="50.5352">&#171;API&#187;</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="44" x="1264.5" y="67.0234">Fuseki</text><path d="M1269,9 L1269,33 M1269,21 L1286,21 " fill="none" style="stroke:#181818;stroke-width:0.5;" /><ellipse cx="1298" cy="21" fill="#E2E2F0" rx="12" ry="12" style="stroke:#181818;stroke-width:0.5;" /><text fill="#000000" font-family="sans-serif" font-size="14" font-style="italic" lengthAdjust="spacing" textLength="36" x="1268.5" y="454.2383">&#171;API&#187;</text><text fill="#000000" font-family="sans-serif" font-size="14" lengthAdjust="spacing" textLength="44" x="1264.5" y="470.7266">Fuseki</text><path d="M1269,477.6797 L1269,501.6797 M1269,489.6797 L1286,489.6797 " fill="none" style="stroke:#181818;stroke-width:0.5;" /><ellipse cx="1298" cy="489.6797" fill="#E2E2F0" rx="12" ry="12" style="stroke:#181818;stroke-width:0.5;" /><line style="stroke:#181818;stroke-width:1.0;" x1="301" x2="291" y1="101.2871" y2="97.2871" /><line style="stroke:#181818;stroke-width:1.0;" x1="72" x2="302" y1="101.2871" y2="101.2871" /><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="207" x="79" y="96.5449">activemq:queue:index.triplestore</text><line style="stroke:#181818;stroke-width:1.0;" x1="627" x2="617" y1="130.5977" y2="126.5977" /><line style="stroke:#181818;stroke-width:1.0;" x1="303" x2="628" y1="130.5977" y2="130.5977" /><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="302" x="310" y="125.8555">[if event is create] direct:index.triplestore.create</text><line style="stroke:#181818;stroke-width:1.0;" x1="415" x2="425" y1="159.9082" y2="155.9082" /><line style="stroke:#181818;stroke-width:1.0;" x1="414" x2="628" y1="159.9082" y2="159.9082" /><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="85" x="431" y="155.166">direct:getRDF</text><line style="stroke:#181818;stroke-width:1.0;" x1="1178" x2="1168" y1="189.2188" y2="185.2188" /><line style="stroke:#181818;stroke-width:1.0;" x1="629" x2="1179" y1="189.2188" y2="189.2188" /><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="174" x="636" y="184.4766">direct:index.triplestore.http</text><polygon fill="#181818" points="1277.5,214.5293,1287.5,218.5293,1277.5,222.5293,1281.5,218.5293" style="stroke:#181818;stroke-width:1.0;" /><line style="stroke:#181818;stroke-width:1.0;" x1="1180" x2="1283.5" y1="218.5293" y2="218.5293" /><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="33" x="1187" y="213.7871">HTTP</text><line style="stroke:#181818;stroke-width:1.0;" x1="804" x2="794" y1="247.8398" y2="243.8398" /><line style="stroke:#181818;stroke-width:1.0;" x1="303" x2="805" y1="247.8398" y2="247.8398" /><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="312" x="310" y="243.0977">[if event is update] direct:index.triplestore.update</text><line style="stroke:#181818;stroke-width:1.0;" x1="415" x2="425" y1="277.1504" y2="273.1504" /><line style="stroke:#181818;stroke-width:1.0;" x1="414" x2="805" y1="277.1504" y2="277.1504" /><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="85" x="431" y="272.4082">direct:getRDF</text><line style="stroke:#181818;stroke-width:1.0;" x1="1178" x2="1168" y1="306.4609" y2="302.4609" /><line style="stroke:#181818;stroke-width:1.0;" x1="806" x2="1179" y1="306.4609" y2="306.4609" /><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="174" x="813" y="301.7188">direct:index.triplestore.http</text><polygon fill="#181818" points="1277.5,331.7715,1287.5,335.7715,1277.5,339.7715,1281.5,335.7715" style="stroke:#181818;stroke-width:1.0;" /><line style="stroke:#181818;stroke-width:1.0;" x1="1180" x2="1283.5" y1="335.7715" y2="335.7715" /><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="33" x="1187" y="331.0293">HTTP</text><line style="stroke:#181818;stroke-width:1.0;" x1="980" x2="970" y1="365.082" y2="361.082" /><line style="stroke:#181818;stroke-width:1.0;" x1="303" x2="981" y1="365.082" y2="365.082" /><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="310" x="310" y="360.3398">[if event is delete] : direct:index.triplestore.delete</text><line style="stroke:#181818;stroke-width:1.0;" x1="1178" x2="1168" y1="394.3926" y2="390.3926" /><line style="stroke:#181818;stroke-width:1.0;" x1="982" x2="1179" y1="394.3926" y2="394.3926" /><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="174" x="989" y="389.6504">direct:index.triplestore.http</text><polygon fill="#181818" points="1277.5,419.7031,1287.5,423.7031,1277.5,427.7031,1281.5,423.7031" style="stroke:#181818;stroke-width:1.0;" /><line style="stroke:#181818;stroke-width:1.0;" x1="1180" x2="1283.5" y1="423.7031" y2="423.7031" /><text fill="#000000" font-family="sans-serif" font-size="13" lengthAdjust="spacing" textLength="33" x="1187" y="418.9609">HTTP</text></g></svg></p>
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+    
+    <nav class="md-footer__inner md-grid" aria-label="Footer" >
+      
+        
+        <a href="../solr/" class="md-footer__link md-footer__link--prev" aria-label="Previous: Solr Indexing" rel="prev">
+          <div class="md-footer__button md-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11h12Z"/></svg>
+          </div>
+          <div class="md-footer__title">
+            <div class="md-ellipsis">
+              <span class="md-footer__direction">
+                Previous
+              </span>
+              Solr Indexing
+            </div>
+          </div>
+        </a>
+      
+      
+    </nav>
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    <script id="__config" type="application/json">{"base": "../../..", "features": [], "search": "../../../assets/javascripts/workers/search.16e2a7d4.min.js", "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.config.lang": "en", "search.config.pipeline": "trimmer, stopWordFilter", "search.config.separator": "[\\s\\-]+", "search.placeholder": "Search", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version.title": "Select version"}}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.5a2dcb6a.min.js"></script>
+      
+    
+    
+  </body>
+</html>
