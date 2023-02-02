@@ -137,11 +137,11 @@ issue_title_facet = .[rdf:type is bibo:Issue]/dcterms:title | pcdm:memberOf[rdf:
             || "http://www.w3.org/ns/oa#Annotation" in ${header.CamelFcrepoResourceType}
             || "http://www.openarchives.org/ore/terms/Proxy" in ${header.CamelFcrepoResourceType}
           </simple>
-          <log loggingLevel="DEBUG" message="${header.CamelFcrepoUri} has a recognized RDF type for Solr indexing"/>
+          <log loggingLevel="INFO" message="${header.CamelFcrepoUri} has a recognized RDF type for Solr indexing"/>
           <to uri="direct:index.solr"/>
         </when>
         <otherwise>
-          <log loggingLevel="DEBUG" message="Skipping Solr indexing of ${header.CamelFcrepoUri} because it is not a recognized RDF type"/>
+          <log loggingLevel="INFO" message="Skipping Solr indexing of ${header.CamelFcrepoUri} because it is not a recognized RDF type"/>
           <stop/>
         </otherwise>
       </choice>
@@ -169,9 +169,9 @@ issue_title_facet = .[rdf:type is bibo:Issue]/dcterms:title | pcdm:memberOf[rdf:
       <setHeader headerName="CamelHttpUri">
         <simple>${sysenv.REPO_INTERNAL_URL}${header.CamelFcrepoPath}</simple>
       </setHeader>
-      <log loggingLevel="DEBUG" message="Indexing ${header.CamelFcrepoUri} to Solr"/>
+      <log loggingLevel="INFO" message="Indexing ${header.CamelFcrepoUri} to Solr"/>
       <process ref="indexingLDPathProcessor"/>
-      <log loggingLevel="DEBUG" message="Finished LDPath processing of ${header.CamelFcrepoUri}"/>
+      <log loggingLevel="INFO" message="Finished LDPath processing of ${header.CamelFcrepoUri}"/>
 
       <!-- update Solr index using the result of the LDPath transformation -->
       <removeHeaders pattern="CamelHttp*"/>
