@@ -182,6 +182,34 @@
     <route id="edu.umd.lib.camel.routes.Binaries">
       <from uri="direct:binary"/>
       <multicast parallelProcessing="true">
+        <pipeline>
+          <removeHeaders pattern="CamelHttp*"/>
+          <process ref="addBearerAuthorization"/>
+          <!-- check whether this is an image or not -->
+          <setHeader headerName="CamelHttpUri">
+            <simple>${sysenv.REPO_INTERNAL_URL}${header.CamelFcrepoPath}</simple>
+          </setHeader>
+          <setHeader headerName="CamelHttpMethod">
+            <constant>HEAD</constant>
+          </setHeader>
+          <!-- send the HEAD request to fcrepo -->
+          <log loggingLevel="DEBUG" message="HEAD ${header.CamelHttpUri}"/>
+          <to uri="http4:fcrepo"/>
+          <filter>
+            <!--
+              if the message is about an image, remove all headers except for CamelFcrepoUri,
+              clear the body, and send to the image pre-fetcher queue
+            -->
+            <simple>${header[Content-Type]} starts with "image/"</simple>
+            <log loggingLevel="INFO" message="Image detected, sending to image pre-fetching queue"/>
+            <!-- clean out unnecessary headers (just leave the fcrepo URI), and clear the body -->
+            <removeHeaders pattern="*" excludePattern="CamelFcrepoUri"/>
+            <setBody>
+              <constant/>
+            </setBody>
+            <to uri="activemq:queue:images"/>
+          </filter>
+        </pipeline>
         <filter>
           <!--
             if the message is about a new binary, remove all headers except for CamelFcrepoUri,
