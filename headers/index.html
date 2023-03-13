@@ -630,19 +630,29 @@
 
 <h1 id="message-headers">Message Headers</h1>
 <h2 id="camelauditeventtype">CamelAuditEventType</h2>
-<p>URI from a vocabulary identifying a type of repository event. Expected values are:</p>
-<ul>
-<li><a href="http://fedora.info/definitions/v4/event#ResourceCreation">http://fedora.info/definitions/v4/event#ResourceCreation</a></li>
-<li><a href="https://www.w3.org/ns/activitystreams#Create">https://www.w3.org/ns/activitystreams#Create</a></li>
-<li><a href="http://fedora.info/definitions/v4/event#ResourceDeletion">http://fedora.info/definitions/v4/event#ResourceDeletion</a></li>
-<li><a href="https://www.w3.org/ns/activitystreams#Delete">https://www.w3.org/ns/activitystreams#Delete</a></li>
-<li><a href="http://fedora.info/definitions/v4/event#ResourceModification">http://fedora.info/definitions/v4/event#ResourceModification</a></li>
-<li><a href="https://www.w3.org/ns/activitystreams#Update">https://www.w3.org/ns/activitystreams#Update</a></li>
-</ul>
-<p>These terms come from either of these vocabularies:</p>
+<p>URI from a vocabulary identifying a type of repository event, from one of
+these vocabularies:</p>
 <ul>
 <li><a href="http://fedora.info/definitions/v4/event">Fedora Commons Event Ontology</a></li>
 <li><a href="https://www.w3.org/ns/activitystreams">ActivityStreams 2.0 Terms</a></li>
+</ul>
+<p>Expected values are:</p>
+<ul>
+<li>Resource creation<ul>
+<li><a href="http://fedora.info/definitions/v4/event#ResourceCreation">http://fedora.info/definitions/v4/event#ResourceCreation</a></li>
+<li><a href="https://www.w3.org/ns/activitystreams#Create">https://www.w3.org/ns/activitystreams#Create</a></li>
+</ul>
+</li>
+<li>Resource modification<ul>
+<li><a href="http://fedora.info/definitions/v4/event#ResourceModification">http://fedora.info/definitions/v4/event#ResourceModification</a></li>
+<li><a href="https://www.w3.org/ns/activitystreams#Update">https://www.w3.org/ns/activitystreams#Update</a></li>
+</ul>
+</li>
+<li>Resource deletion<ul>
+<li><a href="http://fedora.info/definitions/v4/event#ResourceDeletion">http://fedora.info/definitions/v4/event#ResourceDeletion</a></li>
+<li><a href="https://www.w3.org/ns/activitystreams#Delete">https://www.w3.org/ns/activitystreams#Delete</a></li>
+</ul>
+</li>
 </ul>
 <h2 id="camelauditeventuri">CamelAuditEventUri</h2>
 <p>URI for the event created from a base URL plus the <a href="#camelfcrepoeventid">CamelFcrepoEventId</a>.</p>
