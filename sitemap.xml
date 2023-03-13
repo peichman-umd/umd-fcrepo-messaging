@@ -2,42 +2,47 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
          <loc>https://umd-lib.github.io/umd-fcrepo-messaging/</loc>
-         <lastmod>2022-12-16</lastmod>
+         <lastmod>2023-03-13</lastmod>
+         <changefreq>daily</changefreq>
+    </url>
+    <url>
+         <loc>https://umd-lib.github.io/umd-fcrepo-messaging/headers/</loc>
+         <lastmod>2023-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://umd-lib.github.io/umd-fcrepo-messaging/contexts/</loc>
-         <lastmod>2022-12-16</lastmod>
+         <lastmod>2023-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://umd-lib.github.io/umd-fcrepo-messaging/contexts/auditing/</loc>
-         <lastmod>2022-12-16</lastmod>
+         <lastmod>2023-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://umd-lib.github.io/umd-fcrepo-messaging/contexts/fixity/</loc>
-         <lastmod>2022-12-16</lastmod>
+         <lastmod>2023-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://umd-lib.github.io/umd-fcrepo-messaging/contexts/routing/</loc>
-         <lastmod>2022-12-16</lastmod>
+         <lastmod>2023-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://umd-lib.github.io/umd-fcrepo-messaging/contexts/indexing/</loc>
-         <lastmod>2022-12-16</lastmod>
+         <lastmod>2023-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://umd-lib.github.io/umd-fcrepo-messaging/contexts/indexing/solr/</loc>
-         <lastmod>2022-12-16</lastmod>
+         <lastmod>2023-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
     <url>
          <loc>https://umd-lib.github.io/umd-fcrepo-messaging/contexts/indexing/triplestore/</loc>
-         <lastmod>2022-12-16</lastmod>
+         <lastmod>2023-03-13</lastmod>
          <changefreq>daily</changefreq>
     </url>
 </urlset>
