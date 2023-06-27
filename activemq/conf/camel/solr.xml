@@ -40,6 +40,7 @@
 @prefix rel: <http://id.loc.gov/vocabulary/relators/>
 @prefix edm: <http://www.europeana.eu/schemas/edm/>
 @prefix ldp: <http://www.w3.org/ns/ldp#>
+@prefix umdtype: <http://vocab.lib.umd.edu/datatype#>
 
 id = . :: xsd:string ;
 rdf_type = rdf:type :: xsd:string;
@@ -119,6 +120,7 @@ annotation_motivation = oa:motivatedBy :: xsd:string;
 resource_selector = oa:hasTarget/oa:hasSelector[rdf:type is oa:FragmentSelector]/rdf:value :: xsd:string;
 
 issue_title_facet = .[rdf:type is bibo:Issue]/dcterms:title | pcdm:memberOf[rdf:type is bibo:Issue]/dcterms:title :: xsd:string;
+handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
       ]]></value>
     </property>
   </bean>
