@@ -18,7 +18,7 @@ RUN mvn dependency:copy-dependencies -DexcludeGroupIds=org.slf4j,ch.qos.logback
 
 FROM openjdk:8u312-jdk-bullseye
 
-ENV ACTIVEMQ_VERSION 5.16.0
+ENV ACTIVEMQ_VERSION 5.16.7
 ENV ACTIVEMQ_URL http://archive.apache.org/dist/activemq/${ACTIVEMQ_VERSION}/apache-activemq-${ACTIVEMQ_VERSION}-bin.tar.gz
 
 # Download and install ActiveMQ.
