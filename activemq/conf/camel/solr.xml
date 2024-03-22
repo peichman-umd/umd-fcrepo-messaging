@@ -41,6 +41,7 @@
 @prefix edm: <http://www.europeana.eu/schemas/edm/>
 @prefix ldp: <http://www.w3.org/ns/ldp#>
 @prefix umdtype: <http://vocab.lib.umd.edu/datatype#>
+@prefix ore: <http://www.openarchives.org/ore/terms/>
 
 id = . :: xsd:string ;
 rdf_type = rdf:type :: xsd:string;
@@ -86,6 +87,7 @@ pcdm_related_object_of = pcdm:relatedObjectOf :: xsd:string;
 rdf_type = rdf:type :: xsd:string;
 collection = (pcdm:memberOf|pcdm:fileOf)+[rdf:type is pcdm:Collection] :: xsd:anyURI;
 collection_title_facet = (pcdm:memberOf|pcdm:fileOf)+[rdf:type is pcdm:Collection]/dcterms:title :: xsd:string;
+presentation_set_label = ore:isAggregatedBy/rdfs:label :: xsd:string;
 citation = dcterms:bibliographicCitation :: xsd:string;
 description = dcterms:description :: xsd:string;
 extent = dcterms:extent :: xsd:string;
