@@ -41,6 +41,7 @@
 @prefix edm: <http://www.europeana.eu/schemas/edm/>
 @prefix ldp: <http://www.w3.org/ns/ldp#>
 @prefix umdtype: <http://vocab.lib.umd.edu/datatype#>
+@prefix ore: <http://www.openarchives.org/ore/terms/>
 
 id = . :: xsd:string ;
 rdf_type = rdf:type :: xsd:string;
@@ -86,6 +87,7 @@ pcdm_related_object_of = pcdm:relatedObjectOf :: xsd:string;
 rdf_type = rdf:type :: xsd:string;
 collection = (pcdm:memberOf|pcdm:fileOf)+[rdf:type is pcdm:Collection] :: xsd:anyURI;
 collection_title_facet = (pcdm:memberOf|pcdm:fileOf)+[rdf:type is pcdm:Collection]/dcterms:title :: xsd:string;
+presentation_set_label = ore:isAggregatedBy/rdfs:label :: xsd:string;
 citation = dcterms:bibliographicCitation :: xsd:string;
 description = dcterms:description :: xsd:string;
 extent = dcterms:extent :: xsd:string;
@@ -178,7 +180,7 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
       <!-- update Solr index using the result of the LDPath transformation -->
       <removeHeaders pattern="CamelHttp*"/>
       <setHeader headerName="CamelHttpUri">
-        <simple>${sysenv.INDEX_SOLR_UPDATE_URI}/json/docs?commitWithin=1000</simple>
+        <simple>${sysenv.INDEX_SOLR_UPDATE_URI}/json?commitWithin=1000</simple>
       </setHeader>
       <setHeader headerName="CamelHttpMethod">
         <constant>POST</constant>
@@ -186,6 +188,9 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
       <setHeader headerName="Content-Type">
         <constant>application/json</constant>
       </setHeader>
+      <setBody>
+        <simple>{"add": {"doc": ${body}}}</simple>
+    </setBody>
       <multicast parallelProcessing="true">
         <to uri="http4:solr"/>
       </multicast>

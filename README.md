@@ -54,6 +54,13 @@ plus a version string. If the `project.version` property defined in the POM
 file is a SNAPSHOT, the version string will be "latest". Otherwise, it will
 be the `project.version` property value from the POM file.
 
+**Note:** You need to push the image to the docker registry to use it in the
+docker swarm setup for local development. Otherwise, docker swarm will pull
+the image from the registry instead. This is especially confusing when building
+images with "latest" tag that not permanent. Alternatively, if we configure
+our local docker stack to use image names without the `docker.lib.umd.edu/`
+prefix, docker swarm will use the locally built image.
+
 ### Run
 
 TODO: specify required environment to run this image
