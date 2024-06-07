@@ -97,6 +97,7 @@ geoname = fn:first(dcterms:spatial/owl:sameAs, dcterms:spatial) :: xsd:string;
 subject = dcterms:subject/rdfs:label | dc:subject :: xsd:string;
 genre = edm:hasType :: xsd:string;
 rights = dcterms:rights :: xsd:string;
+terms_of_use_text = dcterms:license/rdf:value :: xsd:string;
 copyright_notice = schema:copyrightNotice :: xsd:string;
 
 issue_volume = bibo:volume :: xsd:string;
