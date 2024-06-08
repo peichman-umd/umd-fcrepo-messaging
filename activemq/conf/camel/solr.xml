@@ -42,7 +42,7 @@
 @prefix ldp: <http://www.w3.org/ns/ldp#>
 @prefix umdtype: <http://vocab.lib.umd.edu/datatype#>
 @prefix ore: <http://www.openarchives.org/ore/terms/>
-@prefix schema: <http://schema.org/>
+@prefix schema: <https://schema.org/>
 
 id = . :: xsd:string ;
 rdf_type = rdf:type :: xsd:string;
