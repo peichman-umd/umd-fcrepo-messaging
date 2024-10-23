@@ -5,7 +5,7 @@
 
   <bean id="descriptionURI" class="edu.umd.lib.camel.processors.DescriptionURI"/>
 
-  <camelContext xmlns="http://camel.apache.org/schema/spring" id="Triplestore" streamCache="true">
+  <routeContext xmlns="http://camel.apache.org/schema/spring" id="Triplestore">
     <!--
     Expected headers:
     * CamelFcrepoEventName
@@ -157,5 +157,5 @@ WHERE  { <${header.CamelFcrepoUri}> ?p ?o }
       <log loggingLevel="DEBUG" message="SPARQL Update Query: ${body}"/>
       <to uri="http4:triplestore"/>
     </route>
-  </camelContext>
+  </routeContext>
 </beans>

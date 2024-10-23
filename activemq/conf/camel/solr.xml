@@ -3,19 +3,6 @@
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
   http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-  <!-- bean id="deadLetterProcessor" class="edu.umd.lib.camel.processors.DeadLetterProcessor"/>
-
-  <bean id="deadLetterErrorHandler" class="org.apache.camel.builder.DeadLetterChannelBuilder">
-    <property name="deadLetterUri" value="activemq:queue:dead"/>
-    <property name="redeliveryPolicy" ref="redeliveryPolicyConfig"/>
-    <property name="onPrepareFailure" ref="deadLetterProcessor"/>
-  </bean>
-
-  <bean id="redeliveryPolicyConfig" class="org.apache.camel.processor.RedeliveryPolicy">
-    <property name="maximumRedeliveries" value="0"/>
-    <property name="redeliveryDelay" value="5000"/>
-  </bean -->
-
   <bean id="indexingLDPathProcessor" class="edu.umd.lib.camel.processors.LdpathProcessor">
     <property name="query">
       <value><![CDATA[
@@ -126,7 +113,7 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
     </property>
   </bean>
 
-  <camelContext xmlns="http://camel.apache.org/schema/spring" id="SolrIndex" streamCache="true"><!-- errorHandlerRef="deadLetterErrorHandler" -->
+  <routeContext xmlns="http://camel.apache.org/schema/spring" id="Solr">
     <route id="edu.umd.lib.camel.routes.SolrIndexFilter">
       <description>Does initial filtering of event messages to only process resources
       with the RDF types `pcdm:Object`, `pcdm:File`, `pcdm:Collection`, `oa:Annotation`,
@@ -195,6 +182,7 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
           <simple>${header.CamelFcrepoEventName} starts with "delete"</simple>
           <to uri="direct:solr.delete"/>
           <to uri="direct:solr.update"/>
+          <log loggingLevel="INFO" message="Removed ${header.CamelFcrepoUri} from ${header.SolrUpdateEndpoint}"/>
         </when>
         <when>
           <description>import event</description>
@@ -206,6 +194,7 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
             <to uri="direct:solr.solrizer"/>
             <to uri="direct:solr.add"/>
             <to uri="direct:solr.update"/>
+            <log loggingLevel="INFO" message="Indexed ${header.CamelFcrepoUri} to ${header.SolrUpdateEndpoint}"/>
           </filter>
         </when>
         <when>
@@ -214,6 +203,15 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
           <to uri="direct:solr.solrizer"/>
           <to uri="direct:solr.add"/>
           <to uri="direct:solr.update"/>
+          <log loggingLevel="INFO" message="Indexed ${header.CamelFcrepoUri} to ${header.SolrUpdateEndpoint}"/>
+        </when>
+        <when>
+          <description>update event</description>
+          <simple>${header.CamelFcrepoEventName} starts with "update"</simple>
+          <to uri="direct:solr.solrizer"/>
+          <to uri="direct:solr.add"/>
+          <to uri="direct:solr.update"/>
+          <log loggingLevel="INFO" message="Indexed ${header.CamelFcrepoUri} to ${header.SolrUpdateEndpoint}"/>
         </when>
       </choice>
     </route>
@@ -259,7 +257,7 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
         `{"add": {"doc": {...}}}` structure.</description>
       <from uri="direct:solr.add"/>
 
-      <log loggingLevel="INFO" message="Creating Solr add command for ${header.CamelFcrepoUri}"/>
+      <log loggingLevel="DEBUG" message="Creating Solr add command for ${header.CamelFcrepoUri}"/>
       <setHeader headerName="Content-Type">
         <constant>application/json</constant>
       </setHeader>
@@ -273,7 +271,7 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
         resource with the `id` found in the `CamelFcrepoUri` header.</description>
       <from uri="direct:solr.delete"/>
 
-      <log loggingLevel="INFO" message="Creating Solr delete command for ${header.CamelFcrepoUri}"/>
+      <log loggingLevel="DEBUG" message="Creating Solr delete command for ${header.CamelFcrepoUri}"/>
       <setHeader headerName="Content-Type">
         <constant>application/json</constant>
       </setHeader>
@@ -300,6 +298,6 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
       <to uri="http4://solr"/>
     </route>
 
-  </camelContext>
+  </routeContext>
 
 </beans>

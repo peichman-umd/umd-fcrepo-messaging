@@ -60,9 +60,7 @@
     <property name="resultsFormatName" value="csvWithoutHeader"/>
   </bean>
 
-  <!-- must enable stream caching since multiple downstream endpoints need to each read the message body in parallel -->
-  <camelContext xmlns="http://camel.apache.org/schema/spring" id="FixityChecking" streamCache="true">
-
+  <routeContext xmlns="http://camel.apache.org/schema/spring" id="FixityChecking">
     <!--
     Expects headers:
     * CamelFcrepoPath
@@ -233,6 +231,6 @@
       </routingSlip>
     </route>
 
-  </camelContext>
+  </routeContext>
 
 </beans>

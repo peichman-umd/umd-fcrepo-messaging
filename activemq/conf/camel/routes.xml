@@ -5,8 +5,7 @@
 
   <bean id="eventProcessor" class="org.fcrepo.camel.processor.EventProcessor"/>
 
-  <camelContext xmlns="http://camel.apache.org/schema/spring" id="UmdFcrepoEventRouter" streamCache="true">
-
+  <routeContext xmlns="http://camel.apache.org/schema/spring" id="EventProcessing">
     <!--
     Expected headers:
     * org.fcrepo.jms.user
@@ -255,5 +254,5 @@
       </multicast>
     </route>
 
-  </camelContext>
+  </routeContext>
 </beans>

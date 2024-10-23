@@ -3,7 +3,7 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
   http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-  <camelContext xmlns="http://camel.apache.org/schema/spring" id="Indexing" streamCache="true">
+  <routeContext xmlns="http://camel.apache.org/schema/spring" id="Indexing">
     <route id="edu.umd.lib.camel.routes.indexing.Intake">
       <from uri="activemq:queue:index"/>
       <choice>
@@ -33,5 +33,5 @@
       </setHeader>
       <to uri="activemq:queue:index"/>
     </route>
-  </camelContext>
+  </routeContext>
 </beans>

@@ -11,8 +11,7 @@
     <property name="password" value="${AUDIT_DB_PASSWORD}"/>
   </bean>
 
-  <camelContext xmlns="http://camel.apache.org/schema/spring" id="Auditing" streamCache="true">
-
+  <routeContext xmlns="http://camel.apache.org/schema/spring" id="Auditing">
     <!--
     Expected headers:
     * CamelFcrepoUri
@@ -159,6 +158,6 @@
       <to uri="http4:triplestore"/>
     </route>
 
-  </camelContext>
+  </routeContext>
 
 </beans>
