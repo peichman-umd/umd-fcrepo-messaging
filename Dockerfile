@@ -40,6 +40,10 @@ ENV ACTIVEMQ_MAX_DISK=16G
 # use the "-f" flag to avoid failing the build if the file doesn't exist
 RUN rm -f $ACTIVEMQ_HOME/lib/optional/httpclient-4.5.11.jar
 
+# remove spring 4.3.30.RELEASE libraries that are bundled with ActiveMQ,
+# because we want to use Spring 5
+RUN rm -f $ACTIVEMQ_HOME/lib/optional/spring-*-4.3.30.RELEASE.jar
+
 COPY --from=dependencies /var/jars/target/dependency/*.jar $ACTIVEMQ_HOME/lib/optional/
 
 COPY activemq/conf $ACTIVEMQ_HOME/conf/
