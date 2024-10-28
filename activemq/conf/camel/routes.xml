@@ -39,6 +39,19 @@
       <setHeader headerName="CamelFcrepoPath">
         <header>org.fcrepo.jms.identifier</header>
       </setHeader>
+      <setHeader headerName="CamelFcrepoTopLevelResourcePath">
+        <description>extracts the repo path from the top-level resource that the
+        current resource is a part of (or is)</description>
+        <groovy>
+          def match = (headers["CamelFcrepoPath"] =~ $/(/dc/\d{4}/\d+/../../../../.{8}-.{4}-.{4}-.{4}-.{12})/$)
+          if (match) {
+            result = match[0][1]
+          }
+        </groovy>
+      </setHeader>
+      <setHeader headerName="UMDIsTopLevelResource">
+        <simple resultType="java.lang.Boolean">${header.CamelFcrepoPath} == ${header.CamelFcrepoTopLevelResourcePath}</simple>
+      </setHeader>
       <log loggingLevel="DEBUG" message="Event user: ${header.CamelFcrepoUser}"/>
       <log loggingLevel="DEBUG" message="Event user agent: ${header.CamelFcrepoUserAgent}"/>
       <log loggingLevel="INFO" message="Routing event for resource with URI: ${header.CamelFcrepoUri}"/>
@@ -94,19 +107,31 @@
     <!--
     Expected headers:
     * CamelFcrepoEventType
+    * CamelFcrepoUserAgent
     -->
     <route id="edu.umd.lib.camel.routes.DetectEventType">
       <from uri="direct:detectEventType"/>
       <log loggingLevel="DEBUG" message="${routeId}: ${id}"/>
+
       <choice>
         <when>
           <simple>
             ${header.CamelFcrepoEventType} contains "http://fedora.info/definitions/v4/event#ResourceCreation"
             || ${header.CamelFcrepoEventType} contains "https://www.w3.org/ns/activitystreams#Create"
           </simple>
-          <setHeader headerName="CamelFcrepoEventName">
-            <constant>create</constant>
-          </setHeader>
+          <choice>
+            <when>
+              <simple>${header.CamelFcrepoUserAgent} contains '(import)'</simple>
+              <setHeader headerName="CamelFcrepoEventName">
+                <constant>import</constant>
+              </setHeader>
+            </when>
+            <otherwise>
+              <setHeader headerName="CamelFcrepoEventName">
+                <constant>create</constant>
+              </setHeader>
+            </otherwise>
+          </choice>
         </when>
         <when>
           <simple>
@@ -127,6 +152,7 @@
           </setHeader>
         </when>
       </choice>
+
       <to uri="direct:detectBinary"/>
     </route>
 
@@ -215,7 +241,7 @@
             if the message is about a new binary, remove all headers except for CamelFcrepoUri,
             clear the body, and send to the fixity candidates queue
           -->
-          <simple>${header.CamelFcrepoEventName} == "create binary"</simple>
+          <simple>${header.CamelFcrepoEventName} in "create binary,import binary"</simple>
           <log loggingLevel="INFO" message="New binary detected, sending to fixity candidates queue"/>
           <!-- clean out unnecessary headers (just leave the fcrepo URI), and clear the body -->
           <removeHeaders pattern="*" excludePattern="CamelFcrepoUri"/>
