@@ -20,8 +20,8 @@
     Expected environment variables:
     * BATCH_USER
     -->
-    <route id="edu.umd.lib.camel.routes.FedoraEvents">
-      <from uri="activemq:queue:fedora"/>
+    <route id="edu.umd.lib.camel.routes.queue.fedora">
+      <from uri="activemq:fedora"/>
       <process ref="eventProcessor"/>
       <setHeader headerName="CamelFcrepoUser">
         <header>org.fcrepo.jms.user</header>
@@ -69,10 +69,10 @@
         <when>
           <simple>${header.CamelFcrepoUser} == ${sysenv.BATCH_USER}</simple>
           <log loggingLevel="INFO" message="Detected batch user (${header.CamelFcrepoUser}) initiated event."/>
-          <to uri="direct:batch"/>
+          <to uri="direct:BatchEvent"/>
         </when>
         <otherwise>
-          <to uri="direct:detectEventType"/>
+          <to uri="direct:DetectEventType"/>
         </otherwise>
       </choice>
     </route>
@@ -82,8 +82,8 @@
     * CamelFcrepoPath
     * CamelFcrepoResourceType
     -->
-    <route id="edu.umd.lib.camel.routes.BatchEvents">
-      <from uri="direct:batch"/>
+    <route id="edu.umd.lib.camel.routes.BatchEvent">
+      <from uri="direct:BatchEvent"/>
       <filter>
         <simple>${header.CamelFcrepoPath} contains '#'</simple>
         <log loggingLevel="DEBUG" message="URI with fragment detected. Suppressing '${header.CamelFcrepoUri}' node event for batch user."/>
@@ -100,7 +100,7 @@
       <setHeader headerName="UMDBatchEvent">
         <constant>true</constant>
       </setHeader>
-      <to uri="direct:detectEventType"/>
+      <to uri="direct:DetectEventType"/>
     </route>
 
     <!--
@@ -109,7 +109,7 @@
     * CamelFcrepoUserAgent
     -->
     <route id="edu.umd.lib.camel.routes.DetectEventType">
-      <from uri="direct:detectEventType"/>
+      <from uri="direct:DetectEventType"/>
       <log loggingLevel="DEBUG" message="${routeId}: ${id}"/>
 
       <choice>
@@ -152,7 +152,7 @@
         </when>
       </choice>
 
-      <to uri="direct:detectBinary"/>
+      <to uri="direct:DetectBinary"/>
     </route>
 
     <!--
@@ -161,7 +161,7 @@
     * CamelFcrepoEventName
     -->
     <route id="edu.umd.lib.camel.routes.DetectBinary">
-      <from uri="direct:detectBinary"/>
+      <from uri="direct:DetectBinary"/>
       <choice>
         <when>
           <simple>${header.CamelFcrepoResourceType} contains "http://fedora.info/definitions/v4/repository#Binary"</simple>
@@ -179,7 +179,7 @@
         </otherwise>
       </choice>
       <log loggingLevel="INFO" message="Event with MessageID ${id} is a ${headers.CamelFcrepoEventName} event"/>
-      <to uri="direct:distribution"/>
+      <to uri="direct:Distribution"/>
     </route>
 
     <!--
@@ -187,15 +187,15 @@
     * CamelFcrepoUri
     -->
     <route id="edu.umd.lib.camel.routes.Distribution">
-      <from uri="direct:distribution"/>
+      <from uri="direct:Distribution"/>
       <log loggingLevel="DEBUG" message="Distributing event for ${header.CamelFcrepoUri} (MessageID: ${id})"/>
       <multicast parallelProcessing="true">
         <filter>
           <simple>${headers.CamelFcrepoBinary}</simple>
-          <to uri="direct:binary"/>
+          <to uri="direct:BinaryDistribution"/>
         </filter>
-        <to uri="activemq:queue:index"/>
-        <to uri="activemq:queue:audit"/>
+        <to uri="activemq:index"/>
+        <to uri="activemq:audit"/>
       </multicast>
     </route>
 
@@ -204,8 +204,8 @@
     * CamelFcrepoEventName
     * CamelFcrepoUri
     -->
-    <route id="edu.umd.lib.camel.routes.Binaries">
-      <from uri="direct:binary"/>
+    <route id="edu.umd.lib.camel.routes.BinaryDistribution">
+      <from uri="direct:BinaryDistribution"/>
       <multicast parallelProcessing="true">
         <pipeline>
           <removeHeaders pattern="CamelHttp*"/>
@@ -232,7 +232,7 @@
             <setBody>
               <constant/>
             </setBody>
-            <to uri="activemq:queue:images"/>
+            <to uri="activemq:images"/>
           </filter>
         </pipeline>
         <filter>
@@ -250,7 +250,7 @@
           <to uri="activemq:queue:fixitycandidates"/>
         </filter>
         <!-- send to fixity processing -->
-        <to uri="activemq:queue:fixity"/>
+        <to uri="activemq:fixity"/>
       </multicast>
     </route>
 
