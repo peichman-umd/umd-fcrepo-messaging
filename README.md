@@ -9,8 +9,8 @@ UMD Libraries Fedora Messaging Infrastructure
 
 ## Related Repositories
 
-* [umd-camel-processors](https://github.com/umd-lib/umd-camel-processors)
-* [umd-fcrepo-docker]
+* [umd-camel-processors]
+* [umd-fcrepo-auth-utils]
 
 ## Camel Routes
 
@@ -21,24 +21,21 @@ UMD Libraries Fedora Messaging Infrastructure
 
 This repository contains a [Dockerfile](Dockerfile) for creating a Docker image.
 
-This image is based on the [OpenJDK 8 Docker base image], and runs
-[ActiveMQ 5.16.0] with [umd-camel-processors 1.0.0].
-
 ### Volumes
 
-|Mount point|Purpose|
-|-----------|-------|
-|`/var/opt/activemq`|Persistent data for ActiveMQ (queues, logs, etc.)|
-|`/var/log/fixity`  |Fixity check logs (see the [fixity Camel route])|
+| Mount point         | Purpose                                           |
+|---------------------|---------------------------------------------------|
+| `/var/opt/activemq` | Persistent data for ActiveMQ (queues, logs, etc.) |
+| `/var/log/fixity`   | Fixity check logs (see the [fixity Camel route])  |
 
 ### Ports
 
-|Port number|Purpose|
-|-----------|-------|
-|8161       |ActiveMQ web admin console|
-|11099      |[JMX] remote connection|
-|61613      |[STOMP] messaging|
-|61616      |[OpenWire] messaging|
+| Port number | Purpose                    |
+|-------------|----------------------------|
+| 8161        | ActiveMQ web admin console |
+| 11099       | [JMX] remote connection    |
+| 61613       | [STOMP] messaging          |
+| 61616       | [OpenWire] messaging       |
 
 ### Build
 
@@ -94,8 +91,7 @@ See the [LICENSE](LICENSE) file for license rights and limitations (Apache 2.0).
 [fixity Camel route]: activemq/conf/camel/fixity.xml
 [STOMP]: https://stomp.github.io/
 [OpenWire]: https://activemq.apache.org/openwire.html
-[OpenJDK 8 Docker base image]: https://hub.docker.com/_/openjdk
-[ActiveMQ 5.16.0]: https://activemq.apache.org/activemq-5016000-release
-[umd-camel-processors 1.0.0]: https://github.com/umd-lib/umd-camel-processors/tree/1.0.0
+[umd-camel-processors]: https://github.com/umd-lib/umd-camel-processors
+[umd-fcrepo-auth-utils]: https://github.com/umd-lib/umd-fcrepo-auth-utils
 [fabric8io docker-maven-plugin]: https://dmp.fabric8.io/
 [JMX]: https://activemq.apache.org/jmx#activemq-mbeans-reference
