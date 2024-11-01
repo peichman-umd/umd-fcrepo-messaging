@@ -3,9 +3,9 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
   http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-  <camelContext xmlns="http://camel.apache.org/schema/spring" id="Indexing" streamCache="true">
-    <route id="edu.umd.lib.camel.routes.indexing.Intake">
-      <from uri="activemq:queue:index"/>
+  <routeContext xmlns="http://camel.apache.org/schema/spring" id="Indexing">
+    <route id="edu.umd.lib.camel.routes.queue.index">
+      <from uri="activemq:index"/>
       <choice>
         <when>
           <header>CamelFcrepoIndexingDestinations</header>
@@ -17,21 +17,21 @@
         <otherwise>
           <log loggingLevel="DEBUG" message="Sending to all indexing destinations"/>
           <multicast parallelProcessing="true">
-            <to uri="activemq:queue:index.triplestore"/>
-            <to uri="activemq:queue:index.solr"/>
+            <to uri="activemq:index.triplestore"/>
+            <to uri="activemq:index.solr"/>
           </multicast>
         </otherwise>
       </choice>
     </route>
 
-    <route id="edu.umd.lib.camel.routes.indexing.Reindex">
-      <from uri="activemq:queue:reindex"/>
+    <route id="edu.umd.lib.camel.routes.queue.reindex">
+      <from uri="activemq:reindex"/>
       <log loggingLevel="INFO" message="Reindexing resource ${header.CamelFcrepoUri}"/>
       <!-- a request to reindex should be treated the same as if the resource was updated -->
       <setHeader headerName="CamelFcrepoEventName">
         <constant>update</constant>
       </setHeader>
-      <to uri="activemq:queue:index"/>
+      <to uri="activemq:index"/>
     </route>
-  </camelContext>
+  </routeContext>
 </beans>

@@ -152,10 +152,59 @@
   <bean id="repoExternalURL" class="java.net.URL">
     <constructor-arg value="${REPO_EXTERNAL_URL}"/>
   </bean>
+
+  <!-- Camel Routing -->
   <import resource="camel/routes.xml"/>
   <import resource="camel/indexing.xml"/>
-  <import resource="camel/audit.xml"/>
+  <import resource="camel/auditing.xml"/>
   <import resource="camel/fixity.xml"/>
   <import resource="camel/triplestore.xml"/>
   <import resource="camel/solr.xml"/>
+
+  <!-- must enable stream caching since multiple downstream endpoints need to each read the message body in parallel -->
+  <camelContext xmlns="http://camel.apache.org/schema/spring" id="fcrepo" streamCache="true">
+    <routeContextRef ref="EventProcessing"/>
+    <routeContextRef ref="Indexing"/>
+    <routeContextRef ref="Auditing"/>
+    <routeContextRef ref="FixityChecking"/>
+    <routeContextRef ref="Solr"/>
+    <routeContextRef ref="Triplestore"/>
+
+    <onException>
+      <exception>java.lang.Exception</exception>
+      <handled>
+        <constant>true</constant>
+      </handled>
+      <!-- add some extra error diagnostics to the headers -->
+      <setHeader headerName="CamelFailureRouteId">
+        <exchangeProperty>CamelFailureRouteId</exchangeProperty>
+      </setHeader>
+      <setHeader headerName="CamelFailureEndpoint">
+        <exchangeProperty>CamelFailureEndpoint</exchangeProperty>
+      </setHeader>
+      <setHeader headerName="CamelExceptionMessage">
+        <simple>${exchangeProperty.CamelExceptionCaught.message}</simple>
+      </setHeader>
+      <setHeader headerName="CamelExceptionStackTrace">
+        <groovy>
+          import static org.apache.commons.lang3.exception.ExceptionUtils.getStackTrace
+          result = getStackTrace(exchange.getProperty("CamelExceptionCaught"))
+        </groovy>
+      </setHeader>
+      <setHeader headerName="JMSCorrelationID">
+        <groovy>UUID.randomUUID().toString()</groovy>
+      </setHeader>
+      <log loggingLevel="ERROR" message="Failed endpoint: ${header.CamelFailureEndpoint}"/>
+      <log loggingLevel="ERROR" message="${header.CamelExceptionMessage}"/>
+      <setProperty propertyName="errorQueue">
+        <groovy>"activemq:errors." + headers["CamelFailureRouteId"].replace("edu.umd.lib.camel.", "", )</groovy>
+      </setProperty>
+      <log loggingLevel="ERROR" message="Message routed to ${exchangeProperty.errorQueue} with JMS Correlation ID ${header.JMSCorrelationID}"/>
+      <recipientList>
+        <exchangeProperty>errorQueue</exchangeProperty>
+      </recipientList>
+      <stop/>
+    </onException>
+
+  </camelContext>
 </beans>
