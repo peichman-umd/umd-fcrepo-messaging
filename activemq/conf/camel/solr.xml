@@ -188,21 +188,30 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
           <filter>
             <description>is a top-level resource</description>
             <simple>${header.UMDIsTopLevelResource}</simple>
+            <setProperty propertyName="solrCommand">
+              <constant>add</constant>
+            </setProperty>
             <to uri="direct:solr.Solrizer"/>
-            <to uri="direct:solr.AddToIndex"/>
+            <to uri="direct:solr.SendUpdate"/>
           </filter>
         </when>
         <when>
           <description>create event</description>
           <simple>${header.CamelFcrepoEventName} starts with "create"</simple>
+          <setProperty propertyName="solrCommand">
+            <constant>add</constant>
+          </setProperty>
           <to uri="direct:solr.Solrizer"/>
-          <to uri="direct:solr.AddToIndex"/>
+          <to uri="direct:solr.SendUpdate"/>
         </when>
         <when>
           <description>update event</description>
           <simple>${header.CamelFcrepoEventName} starts with "update"</simple>
+          <setProperty propertyName="solrCommand">
+            <constant>update</constant>
+          </setProperty>
           <to uri="direct:solr.Solrizer"/>
-          <to uri="direct:solr.AddToIndex"/>
+          <to uri="direct:solr.SendUpdate"/>
         </when>
       </choice>
     </route>
@@ -247,11 +256,11 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
         `SOLRIZER_ENDPOINT` environment variable to set the message body to the
         content of a Solr document in JSON format for the resource with the URI
         given in the `CamelFcrepoUri` header.</description>
-      <from uri="direct:solr.solrizer"/>
+      <from uri="direct:solr.Solrizer"/>
 
       <removeHeaders pattern="CamelHttp*"/>
       <setHeader headerName="CamelHttpUri">
-        <simple>${sysenv.SOLRIZER_ENDPOINT}?uri=${header.CamelFcrepoUri}</simple>
+        <simple>${sysenv.SOLRIZER_ENDPOINT}?uri=${header.CamelFcrepoUri}&amp;command=${exchangeProperty.solrCommand}</simple>
       </setHeader>
       <setHeader headerName="CamelHttpMethod">
         <constant>GET</constant>
@@ -297,15 +306,18 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
         `SolrUpdateEndpoint` header as an HTTP POST request.</description>
       <from uri="direct:solr.SendUpdate"/>
 
-      <log loggingLevel="DEBUG" message="Sending ${body} to ${header.SolrUpdateEndpoint}"/>
-
       <removeHeaders pattern="CamelHttp*"/>
       <setHeader headerName="CamelHttpUri">
-        <simple>${header.SolrUpdateEndpoint}?commitWithin=1000</simple>
+        <simple>${header.SolrUpdateEndpoint}?commitWithin=1000&amp;overwrite=true</simple>
       </setHeader>
       <setHeader headerName="CamelHttpMethod">
         <constant>POST</constant>
       </setHeader>
+      <setHeader headerName="Content-Type">
+        <constant>application/json</constant>
+      </setHeader>
+
+      <log loggingLevel="DEBUG" message="Sending ${body} to ${header.CamelHttpUri}"/>
 
       <to uri="http4://solr"/>
     </route>
