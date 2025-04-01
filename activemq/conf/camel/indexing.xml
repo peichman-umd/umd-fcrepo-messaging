@@ -9,19 +9,19 @@
       <choice>
         <when>
           <header>CamelFcrepoIndexingDestinations</header>
-          <log loggingLevel="DEBUG" message="Sending to ${header.CamelFcrepoIndexingDestinations}"/>
-          <recipientList ignoreInvalidEndpoints="true" parallelProcessing="true">
-            <header>CamelFcrepoIndexingDestinations</header>
-          </recipientList>
+          <log loggingLevel="DEBUG" message="CamelFcrepoIndexingDestinations header found: ${header.CamelFcrepoIndexingDestinations}"/>
         </when>
         <otherwise>
-          <log loggingLevel="DEBUG" message="Sending to all indexing destinations"/>
-          <multicast parallelProcessing="true">
-            <to uri="activemq:index.triplestore"/>
-            <to uri="activemq:index.solr"/>
-          </multicast>
+          <log loggingLevel="DEBUG" message="No CamelFcrepoIndexingDestinations header found, using default"/>
+          <setHeader headerName="CamelFcrepoIndexingDestinations">
+            <constant>activemq:index.triplestore,activemq:index.solr</constant>
+          </setHeader>
         </otherwise>
       </choice>
+      <log loggingLevel="INFO" message="Indexing destinations: ${header.CamelFcrepoIndexingDestinations}"/>
+      <recipientList ignoreInvalidEndpoints="true" parallelProcessing="true">
+        <header>CamelFcrepoIndexingDestinations</header>
+      </recipientList>
     </route>
 
     <route id="edu.umd.lib.camel.routes.queue.reindex">
