@@ -139,7 +139,7 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
             <otherwise>
               <log loggingLevel="DEBUG" message="No CamelFcrepoSolrIndexingDestinations header found, using default"/>
               <setHeader headerName="CamelFcrepoSolrIndexingDestinations">
-                <constant>direct:solr.LegacyIndex,direct:solr.Index</constant>
+                <constant>direct:solr.LegacyIndex</constant>
               </setHeader>
             </otherwise>
           </choice>
