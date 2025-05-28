@@ -11,8 +11,7 @@
     <property name="password" value="${AUDIT_DB_PASSWORD}"/>
   </bean>
 
-  <camelContext xmlns="http://camel.apache.org/schema/spring" id="Auditing" streamCache="true">
-
+  <routeContext xmlns="http://camel.apache.org/schema/spring" id="Auditing">
     <!--
     Expected headers:
     * CamelFcrepoUri
@@ -21,8 +20,8 @@
     Expected environment variables:
     * AUDIT_EVENT_BASE_URI
     -->
-    <route id="edu.umd.lib.camel.routes.Audit">
-      <from uri="activemq:queue:audit"/>
+    <route id="edu.umd.lib.camel.routes.queue.audit">
+      <from uri="activemq:audit"/>
       <log loggingLevel="DEBUG" message="Receiving audit event for ${header.CamelFcrepoUri}"/>
       <setHeader headerName="CamelAuditEventUri">
         <simple>${sysenv.AUDIT_EVENT_BASE_URI}${header.CamelFcrepoEventId}</simple>
@@ -36,6 +35,18 @@
         </when>
         <when>
           <simple>${headers.CamelFcrepoEventName} == "create RDF"</simple>
+          <setHeader headerName="CamelAuditEventType">
+            <constant>http://id.loc.gov/vocabulary/preservation/eventType/cre</constant>
+          </setHeader>
+        </when>
+        <when>
+          <simple>${headers.CamelFcrepoEventName} == "import binary"</simple>
+          <setHeader headerName="CamelAuditEventType">
+            <constant>http://id.loc.gov/vocabulary/preservation/eventType/ing</constant>
+          </setHeader>
+        </when>
+        <when>
+          <simple>${headers.CamelFcrepoEventName} == "import RDF"</simple>
           <setHeader headerName="CamelAuditEventType">
             <constant>http://id.loc.gov/vocabulary/preservation/eventType/cre</constant>
           </setHeader>
@@ -67,8 +78,8 @@
       </choice>
       <log loggingLevel="DEBUG" message="Event type for PREMIS: ${header.CamelAuditEventType}"/>
       <multicast parallelProcessing="true">
-        <to uri="direct:generatePremis"/>
-        <to uri="activemq:queue:audit.database"/>
+        <to uri="direct:auditing.GeneratePremis"/>
+        <to uri="activemq:audit.database"/>
       </multicast>
     </route>
 
@@ -80,8 +91,8 @@
     * CamelFcrepoUserAgent
     * CamelAuditEventType
     -->
-    <route id="edu.umd.lib.camel.routes.GeneratePremis">
-      <from uri="direct:generatePremis"/>
+    <route id="edu.umd.lib.camel.routes.auditing.GeneratePremis">
+      <from uri="direct:auditing.GeneratePremis"/>
       <setBody>
         <simple><![CDATA[
 <${header.CamelAuditEventUri}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://fedora.info/definitions/v4/audit#InternalEvent> .
@@ -110,8 +121,8 @@
     Expected beans:
     * auditDatabase : javax.sql.DataSource
     -->
-    <route id="edu.umd.lib.camel.routes.AuditDatabase">
-      <from uri="activemq:queue:audit.database"/>
+    <route id="edu.umd.lib.camel.routes.queue.audit.database">
+      <from uri="activemq:audit.database"/>
       <setBody>
         <constant><![CDATA[
           INSERT INTO history (event_uri, event_type, username, resource_uri, timestamp)
@@ -129,8 +140,8 @@
     Expected environment variables:
     * AUDIT_TRIPLESTORE_UPDATE_URI
     -->
-    <route id="edu.umd.lib.camel.routes.AuditTriplestore">
-      <from uri="activemq:queue:audit.triplestore"/>
+    <route id="edu.umd.lib.camel.routes.queue.audit.triplestore">
+      <from uri="activemq:audit.triplestore"/>
       <removeHeaders pattern="*"/>
       <setHeader headerName="Content-Type">
         <constant>application/sparql-update</constant>
@@ -147,6 +158,6 @@
       <to uri="http4:triplestore"/>
     </route>
 
-  </camelContext>
+  </routeContext>
 
 </beans>

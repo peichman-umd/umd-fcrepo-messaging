@@ -3,35 +3,35 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
   http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-  <camelContext xmlns="http://camel.apache.org/schema/spring" id="Indexing" streamCache="true">
-    <route id="edu.umd.lib.camel.routes.indexing.Intake">
-      <from uri="activemq:queue:index"/>
+  <routeContext xmlns="http://camel.apache.org/schema/spring" id="Indexing">
+    <route id="edu.umd.lib.camel.routes.queue.index">
+      <from uri="activemq:index"/>
       <choice>
         <when>
           <header>CamelFcrepoIndexingDestinations</header>
-          <log loggingLevel="DEBUG" message="Sending to ${header.CamelFcrepoIndexingDestinations}"/>
-          <recipientList ignoreInvalidEndpoints="true" parallelProcessing="true">
-            <header>CamelFcrepoIndexingDestinations</header>
-          </recipientList>
+          <log loggingLevel="DEBUG" message="CamelFcrepoIndexingDestinations header found: ${header.CamelFcrepoIndexingDestinations}"/>
         </when>
         <otherwise>
-          <log loggingLevel="DEBUG" message="Sending to all indexing destinations"/>
-          <multicast parallelProcessing="true">
-            <to uri="activemq:queue:index.triplestore"/>
-            <to uri="activemq:queue:index.solr"/>
-          </multicast>
+          <log loggingLevel="DEBUG" message="No CamelFcrepoIndexingDestinations header found, using default"/>
+          <setHeader headerName="CamelFcrepoIndexingDestinations">
+            <constant>activemq:index.triplestore,activemq:index.solr</constant>
+          </setHeader>
         </otherwise>
       </choice>
+      <log loggingLevel="INFO" message="Indexing destinations: ${header.CamelFcrepoIndexingDestinations}"/>
+      <recipientList ignoreInvalidEndpoints="true" parallelProcessing="true">
+        <header>CamelFcrepoIndexingDestinations</header>
+      </recipientList>
     </route>
 
-    <route id="edu.umd.lib.camel.routes.indexing.Reindex">
-      <from uri="activemq:queue:reindex"/>
+    <route id="edu.umd.lib.camel.routes.queue.reindex">
+      <from uri="activemq:reindex"/>
       <log loggingLevel="INFO" message="Reindexing resource ${header.CamelFcrepoUri}"/>
       <!-- a request to reindex should be treated the same as if the resource was updated -->
       <setHeader headerName="CamelFcrepoEventName">
         <constant>update</constant>
       </setHeader>
-      <to uri="activemq:queue:index"/>
+      <to uri="activemq:index"/>
     </route>
-  </camelContext>
+  </routeContext>
 </beans>
