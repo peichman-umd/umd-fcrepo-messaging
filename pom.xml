@@ -5,7 +5,7 @@
   <artifactId>umd-fcrepo-messaging</artifactId>
   <name>UMD Fedora Repository Messaging Infrastructure</name>
   <description>The Fedora messaging infrastructure</description>
-  <version>1.7.1</version>
+  <version>1.8.0-dev</version>
 
   <properties>
     <camel.version>2.25.4</camel.version>
