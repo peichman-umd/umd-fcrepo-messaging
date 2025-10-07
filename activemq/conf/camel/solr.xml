@@ -131,29 +131,42 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
             || "http://www.openarchives.org/ore/terms/Proxy" in ${header.CamelFcrepoResourceType}
           </simple>
           <log loggingLevel="INFO" message="${header.CamelFcrepoUri} has a recognized RDF type for Solr indexing"/>
-          <choice>
-            <when>
-              <header>CamelFcrepoSolrIndexingDestinations</header>
-              <log loggingLevel="DEBUG" message="CamelFcrepoSolrIndexingDestinations header found: ${header.CamelFcrepoSolrIndexingDestinations}"/>
-            </when>
-            <otherwise>
-              <log loggingLevel="DEBUG" message="No CamelFcrepoSolrIndexingDestinations header found, using default"/>
-              <setHeader headerName="CamelFcrepoSolrIndexingDestinations">
-                <constant>direct:solr.LegacyIndex,direct:solr.Index</constant>
-              </setHeader>
-            </otherwise>
-          </choice>
-          <log loggingLevel="INFO" message="Solr indexing destinations: ${header.CamelFcrepoSolrIndexingDestinations}"/>
-          <recipientList ignoreInvalidEndpoints="true" parallelProcessing="true">
-            <description>One or more of: `direct:solr.Index`, `direct:solr.LegacyIndex`</description>
-            <header>CamelFcrepoSolrIndexingDestinations</header>
-          </recipientList>
+          <to uri="direct:solr.Distribution"/>
+        </when>
+        <when>
+          <description>resource that was deleted from the repository</description>
+          <simple>${header.CamelFcrepoEventName} == "delete"</simple>
+          <log loggingLevel="INFO" message="Request to delete ${header.CamelFcrepoUri} from Solr index"/>
+          <to uri="direct:solr.Distribution"/>
         </when>
         <otherwise>
           <log loggingLevel="INFO" message="Skipping Solr indexing of ${header.CamelFcrepoUri} because it is not a recognized RDF type"/>
           <stop/>
         </otherwise>
       </choice>
+    </route>
+
+    <route id="edu.umd.lib.camel.routes.solr.Distribution">
+      <description>Distribute to the appropriate Solr indexing endpoints based on the
+        routing headers.</description>
+      <from uri="direct:solr.Distribution"/>
+      <choice>
+        <when>
+          <header>CamelFcrepoSolrIndexingDestinations</header>
+          <log loggingLevel="DEBUG" message="CamelFcrepoSolrIndexingDestinations header found: ${header.CamelFcrepoSolrIndexingDestinations}"/>
+        </when>
+        <otherwise>
+          <log loggingLevel="DEBUG" message="No CamelFcrepoSolrIndexingDestinations header found, using default"/>
+          <setHeader headerName="CamelFcrepoSolrIndexingDestinations">
+            <constant>direct:solr.LegacyIndex,direct:solr.Index</constant>
+          </setHeader>
+        </otherwise>
+      </choice>
+      <log loggingLevel="INFO" message="Solr indexing destinations: ${header.CamelFcrepoSolrIndexingDestinations}"/>
+      <recipientList ignoreInvalidEndpoints="true" parallelProcessing="true">
+        <description>One or more of: `direct:solr.Index`, `direct:solr.LegacyIndex`</description>
+        <header>CamelFcrepoSolrIndexingDestinations</header>
+      </recipientList>
     </route>
 
     <route id="edu.umd.lib.camel.routes.solr.LegacyIndex">
