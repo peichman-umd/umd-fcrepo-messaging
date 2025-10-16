@@ -76,17 +76,17 @@ now=$(date +'%s')
 last_change=$(stat -c'%Y' "$SIZE_FILE")
 elapsed=$((now - last_change))
 
-# exit early when the queue is empty
-if (( current_size == 0 )); then
-    log info "queue=\"${QUEUE}\" msg=\"queue is empty\" elapsed=\"${elapsed}\" last_size=\"${last_size}\" current_size=\"${current_size}\""
-    exit 0
-fi
-
 # update state and exit early when the queue size is changing
 if (( current_size != last_size )); then
     log info "queue=\"${QUEUE}\" msg=\"queue is changing, an updated size will be recorded\" elapsed=\"${elapsed}\" last_size=\"${last_size}\" current_size=\"${current_size}\""
     # only when it is changed do we update the size file (to preserve the timestamp of the change)
     echo "$current_size" > "$SIZE_FILE"
+    exit 0
+fi
+
+# exit early when the queue is empty
+if (( current_size == 0 )); then
+    log info "queue=\"${QUEUE}\" msg=\"queue is empty\" elapsed=\"${elapsed}\" last_size=\"${last_size}\" current_size=\"${current_size}\""
     exit 0
 fi
 
