@@ -19,6 +19,26 @@ THRESHOLD=${2:-300}
 URL="http://localhost:8161/api/jolokia/read/org.apache.activemq:brokerName=localhost,destinationName=$QUEUE,destinationType=Queue,type=Broker"
 SIZE_FILE="/tmp/activemq/$QUEUE"
 
+check_writable() {
+    local file="${1:-}"
+    if [[ -e "${file}" ]]; then
+        # File exists — check direct write permission
+        if [[ ! -w "${file}" ]]; then
+            echo "File '${file}' exists but is not writable." >&2
+            exit 1
+        fi
+    else
+        # File does not exist — check parent directory
+        local dir
+        dir="$(dirname "${file}")"
+        if [[ ! -d "${dir}" || ! -w "${dir}" ]]; then
+            echo "File '${file}' does not exist and directory '${dir}' is not writable." >&2
+            exit 1
+        fi
+    fi
+}
+check_writable "${SIZE_FILE}"
+
 last_size=$(cat "$SIZE_FILE" 2>/dev/null)
 current_size=$(curl -s -H 'Origin: http://localhost' "$URL" | grep -o -e '"QueueSize":[0-9]*' | cut -d: -f2)
 
