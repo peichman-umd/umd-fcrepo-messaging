@@ -11,8 +11,7 @@
 # If, however, the current size is the same as the previously recorded size
 # (and it is not 0), then the script compares the current time to the last
 # time the size was recorded as changing. If that value is greater than the
-# threshold, the script emits a status message to STDOUT and exits with a
-# nonzero status.
+# threshold, the script emits an error message and exits with a nonzero status.
 
 QUEUE=$1
 THRESHOLD=${2:-300}
