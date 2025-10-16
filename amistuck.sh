@@ -12,7 +12,7 @@
 # (and it is not 0), then the script compares the current time to the last
 # time the size was recorded as changing. If that value is greater than the
 # threshold, the script emits an error message and exits with a nonzero status.
-
+set -euo pipefail
 QUEUE=$1
 THRESHOLD=${2:-300}
 
