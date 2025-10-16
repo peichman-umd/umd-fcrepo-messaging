@@ -48,6 +48,7 @@ else
         # ...and the liveness probe failure message (STDERR)
         echo "$error" >&2
         exit 1
+      fi
     fi
   fi
 fi
