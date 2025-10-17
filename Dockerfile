@@ -48,6 +48,7 @@ COPY --from=dependencies /var/jars/target/dependency/*.jar $ACTIVEMQ_HOME/lib/op
 
 COPY activemq/conf $ACTIVEMQ_HOME/conf/
 COPY activemq/env $ACTIVEMQ_HOME/bin/env
+COPY amistuck.sh $ACTIVEMQ_HOME/bin/amistuck.sh
 
 VOLUME /var/opt/activemq
 VOLUME /var/log/fixity
