@@ -204,7 +204,7 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
             <setProperty propertyName="solrCommand">
               <constant>add</constant>
             </setProperty>
-            <to uri="direct:solr.Solrizer"/>
+            <to uri="seda:solr.Solrizer"/>
             <to uri="direct:solr.SendUpdate"/>
           </filter>
         </when>
@@ -214,7 +214,7 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
           <setProperty propertyName="solrCommand">
             <constant>add</constant>
           </setProperty>
-          <to uri="direct:solr.Solrizer"/>
+          <to uri="seda:solr.Solrizer"/>
           <to uri="direct:solr.SendUpdate"/>
         </when>
         <when>
@@ -223,7 +223,7 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
           <setProperty propertyName="solrCommand">
             <constant>update</constant>
           </setProperty>
-          <to uri="direct:solr.Solrizer"/>
+          <to uri="seda:solr.Solrizer"/>
           <to uri="direct:solr.SendUpdate"/>
         </when>
         <when>
@@ -232,7 +232,7 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
           <setProperty propertyName="solrCommand">
             <constant>update</constant>
           </setProperty>
-          <to uri="direct:solr.Solrizer"/>
+          <to uri="seda:solr.Solrizer"/>
           <to uri="direct:solr.SendUpdate"/>
         </when>
       </choice>
@@ -278,7 +278,7 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
         `SOLRIZER_ENDPOINT` environment variable to set the message body to the
         content of a Solr document in JSON format for the resource with the URI
         given in the `CamelFcrepoUri` header.</description>
-      <from uri="direct:solr.Solrizer"/>
+      <from uri="seda:solr.Solrizer?concurrentConsumers={{env:SOLRIZER_CONCURRENT_CONSUMERS:8}}"/>
 
       <removeHeaders pattern="CamelHttp*"/>
       <setHeader headerName="CamelHttpUri">
