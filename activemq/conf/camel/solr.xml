@@ -193,48 +193,10 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
           <simple>${header.CamelFcrepoEventName} starts with "delete"</simple>
           <to uri="direct:solr.DeleteFromIndex"/>
         </when>
-        <when>
-          <description>import event</description>
-          <simple>${header.CamelFcrepoEventName} starts with "import"</simple>
-          <!-- filter out non-top-level resources when indexing after an import
-               since Solrizer will include the child resources itself -->
-          <filter>
-            <description>is a top-level resource</description>
-            <simple>${header.UMDIsTopLevelResource}</simple>
-            <setProperty propertyName="solrCommand">
-              <constant>add</constant>
-            </setProperty>
-            <to uri="seda:solr.Solrizer"/>
-            <to uri="direct:solr.SendUpdate"/>
-          </filter>
-        </when>
-        <when>
-          <description>create event</description>
-          <simple>${header.CamelFcrepoEventName} starts with "create"</simple>
-          <setProperty propertyName="solrCommand">
-            <constant>add</constant>
-          </setProperty>
-          <to uri="seda:solr.Solrizer"/>
-          <to uri="direct:solr.SendUpdate"/>
-        </when>
-        <when>
-          <description>update event</description>
-          <simple>${header.CamelFcrepoEventName} starts with "update"</simple>
-          <setProperty propertyName="solrCommand">
-            <constant>update</constant>
-          </setProperty>
-          <to uri="seda:solr.Solrizer"/>
-          <to uri="direct:solr.SendUpdate"/>
-        </when>
-        <when>
-          <description>reindex event</description>
-          <simple>${header.CamelFcrepoEventName} starts with "reindex"</simple>
-          <setProperty propertyName="solrCommand">
-            <constant>update</constant>
-          </setProperty>
-          <to uri="seda:solr.Solrizer"/>
-          <to uri="direct:solr.SendUpdate"/>
-        </when>
+        <otherwise>
+          <description>any other event</description>
+          <to uri="activemq:solrizer"/>
+        </otherwise>
       </choice>
     </route>
 
@@ -273,12 +235,50 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
       <log loggingLevel="INFO" message="Finished LDPath processing of ${header.CamelFcrepoUri}"/>
     </route>
 
-    <route id="edu.umd.lib.camel.routes.solr.Solrizer">
+    <route id="edu.umd.lib.camel.routes.queue.solrizer">
       <description>Uses the Solrizer service located at the URL given in the
         `SOLRIZER_ENDPOINT` environment variable to set the message body to the
         content of a Solr document in JSON format for the resource with the URI
         given in the `CamelFcrepoUri` header.</description>
-      <from uri="seda:solr.Solrizer?concurrentConsumers={{env:SOLRIZER_CONCURRENT_CONSUMERS:8}}"/>
+      <from uri="activemq:solrizer?concurrentConsumers={{env:SOLRIZER_CONCURRENT_CONSUMERS:8}}"/>
+      <choice>
+        <description>Select appropriate `command` query parameter for Solrizer
+          given the event type (import, create, update, or reindex)</description>
+        <when>
+          <description>import event</description>
+          <simple>${header.CamelFcrepoEventName} starts with "import"</simple>
+          <!-- filter out non-top-level resources when indexing after an import
+               since Solrizer will include the child resources itself -->
+          <filter>
+            <description>is a top-level resource</description>
+            <simple>${header.UMDIsTopLevelResource}</simple>
+            <setProperty propertyName="solrCommand">
+              <constant>add</constant>
+            </setProperty>
+          </filter>
+        </when>
+        <when>
+          <description>create event</description>
+          <simple>${header.CamelFcrepoEventName} starts with "create"</simple>
+          <setProperty propertyName="solrCommand">
+            <constant>add</constant>
+          </setProperty>
+        </when>
+        <when>
+          <description>update event</description>
+          <simple>${header.CamelFcrepoEventName} starts with "update"</simple>
+          <setProperty propertyName="solrCommand">
+            <constant>update</constant>
+          </setProperty>
+        </when>
+        <when>
+          <description>reindex event</description>
+          <simple>${header.CamelFcrepoEventName} starts with "reindex"</simple>
+          <setProperty propertyName="solrCommand">
+            <constant>update</constant>
+          </setProperty>
+        </when>
+      </choice>
 
       <removeHeaders pattern="CamelHttp*"/>
       <setHeader headerName="CamelHttpUri">
@@ -288,8 +288,11 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
         <constant>GET</constant>
       </setHeader>
       <log loggingLevel="INFO" message="Started Solrizer processing of ${header.CamelFcrepoUri}"/>
+      <log loggingLevel="DEBUG" message="Solrizer request URL: ${header.CamelHttpUri}"/>
       <to uri="http4://solrizer"/>
+      <log loggingLevel="DEBUG" message="Solrizer response: ${body}"/>
       <log loggingLevel="INFO" message="Finished Solrizer processing of ${header.CamelFcrepoUri}"/>
+      <to uri="direct:solr.SendUpdate"/>
     </route>
 
     <route id="edu.umd.lib.camel.routes.solr.CreateAddCommand">
