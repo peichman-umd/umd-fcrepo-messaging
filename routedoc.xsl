@@ -152,6 +152,8 @@
 
   <xsl:template name="puml:endpoint">
     <xsl:param name="uri"/>
+    <xsl:variable name="baseUri" select="substring-before($uri, '?')"/>
+    <xsl:variable name="queryString" select="substring-after($uri, '?')"/>
     <xsl:choose>
       <xsl:when test="starts-with($uri, 'activemq:')">
         <xsl:text>queue</xsl:text>
@@ -167,7 +169,14 @@
       </xsl:otherwise>
     </xsl:choose>
     <xsl:text> "</xsl:text>
-    <xsl:value-of select="$uri"/>
+    <xsl:choose>
+      <xsl:when test="$baseUri != ''">
+        <xsl:value-of select="$baseUri"/>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:value-of select="$uri"/>
+      </xsl:otherwise>
+    </xsl:choose>
     <xsl:text>" &lt;&lt;endpoint>>&lf;</xsl:text>
   </xsl:template>
 
@@ -206,10 +215,23 @@
   </xsl:template>
 
   <xsl:template match="camel:from">
-    <xsl:call-template name="puml:message">
-      <xsl:with-param name="from" select="@uri"/>
-      <xsl:with-param name="to" select="../@id"/>
-    </xsl:call-template>
+    <xsl:variable name="baseUri" select="substring-before(@uri, '?')"/>
+    <xsl:variable name="queryString" select="substring-after(@uri, '?')"/>
+    <xsl:choose>
+      <xsl:when test="$baseUri != ''">
+        <xsl:call-template name="puml:message">
+          <xsl:with-param name="from" select="$baseUri"/>
+          <xsl:with-param name="to" select="../@id"/>
+          <xsl:with-param name="label" select="$queryString"/>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="puml:message">
+          <xsl:with-param name="from" select="@uri"/>
+          <xsl:with-param name="to" select="../@id"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="camel:choice">
@@ -268,10 +290,34 @@
   </xsl:template>
 
   <xsl:template match="camel:to">
-    <xsl:call-template name="puml:message">
-      <xsl:with-param name="from" select="ancestor::camel:route/@id"/>
-      <xsl:with-param name="to" select="@uri"/>
-    </xsl:call-template>
+    <xsl:choose>
+      <xsl:when test="starts-with(@uri, 'http4:')">
+        <!-- synchronous -->
+        <xsl:call-template name="puml:message">
+          <xsl:with-param name="from" select="ancestor::camel:route/@id"/>
+          <xsl:with-param name="to" select="@uri"/>
+        </xsl:call-template>
+        <xsl:call-template name="puml:message">
+          <xsl:with-param name="from" select="@uri"/>
+          <xsl:with-param name="to" select="ancestor::camel:route/@id"/>
+          <xsl:with-param name="link">--></xsl:with-param>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:when test="starts-with(@uri, 'activemq:')">
+        <!-- asynchronous -->
+        <xsl:call-template name="puml:message">
+          <xsl:with-param name="from" select="ancestor::camel:route/@id"/>
+          <xsl:with-param name="to" select="@uri"/>
+          <xsl:with-param name="link">->></xsl:with-param>
+        </xsl:call-template>
+      </xsl:when>
+      <xsl:otherwise>
+        <xsl:call-template name="puml:message">
+          <xsl:with-param name="from" select="ancestor::camel:route/@id"/>
+          <xsl:with-param name="to" select="@uri"/>
+        </xsl:call-template>
+      </xsl:otherwise>
+    </xsl:choose>
   </xsl:template>
 
   <xsl:template match="camel:setBody">
@@ -428,7 +474,7 @@
     <xsl:param name="returns" select="''"/>
     <xsl:param name="process" select="''"/>
     <xsl:value-of select="puml:quote($from)"/>
-    <xsl:text> ->> </xsl:text>
+    <xsl:text> -> </xsl:text>
     <xsl:value-of select="puml:quote($to)"/>
     <xsl:if test="$label != ''">
       <xsl:text> : </xsl:text>
@@ -445,7 +491,7 @@
     </xsl:if>
     <xsl:text>&lf;</xsl:text>
     <xsl:value-of select="puml:quote($to)"/>
-    <xsl:text> -->> </xsl:text>
+    <xsl:text> --> </xsl:text>
     <xsl:value-of select="puml:quote($from)"/>
     <xsl:if test="$returns">
       <xsl:text> : </xsl:text>
