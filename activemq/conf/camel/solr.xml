@@ -294,12 +294,26 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
       </choice>
 
       <removeHeaders pattern="CamelHttp*"/>
-      <setHeader headerName="CamelHttpUri">
-        <simple>${sysenv.SOLRIZER_ENDPOINT}?uri=${header.CamelFcrepoUri}&amp;command=${exchangeProperty.solrCommand}</simple>
-      </setHeader>
+
+      <choice>
+        <when>
+          <description>On Behalf Of header is a single user update</description>
+          <simple>${header.CamelFcrepoUserAgent} starts with "plastrond-http"</simple>
+          <setHeader headerName="CamelHttpUri">
+            <simple>${sysenv.SOLRIZER_ENDPOINT}?uri=${header.CamelFcrepoUri}&amp;command=${exchangeProperty.solrCommand}&amp;plastron-cache-enabled=no</simple>
+          </setHeader>
+        </when>
+        <otherwise>
+          <setHeader headerName="CamelHttpUri">
+            <simple>${sysenv.SOLRIZER_ENDPOINT}?uri=${header.CamelFcrepoUri}&amp;command=${exchangeProperty.solrCommand}</simple>
+          </setHeader>
+        </otherwise>
+      </choice>
+
       <setHeader headerName="CamelHttpMethod">
         <constant>GET</constant>
       </setHeader>
+
       <log loggingLevel="INFO" message="Started Solrizer processing of ${header.CamelFcrepoUri}"/>
       <log loggingLevel="DEBUG" message="Solrizer request URL: ${header.CamelHttpUri}"/>
       <to uri="http4://solrizer"/>
