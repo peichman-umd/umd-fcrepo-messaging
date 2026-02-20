@@ -297,7 +297,7 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
 
       <choice>
         <when>
-          <description>On Behalf Of header is a single user update</description>
+          <description>Update initiated from plastrond-http</description>
           <simple>${header.CamelFcrepoUserAgent} starts with "plastrond-http"</simple>
           <setHeader headerName="CamelHttpUri">
             <simple>${sysenv.SOLRIZER_ENDPOINT}?uri=${header.CamelFcrepoUri}&amp;command=${exchangeProperty.solrCommand}&amp;plastron-cache-enabled=no</simple>
