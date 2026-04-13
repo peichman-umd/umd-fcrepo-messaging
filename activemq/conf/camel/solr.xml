@@ -3,122 +3,11 @@
   xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
   http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
 
-  <bean id="indexingLDPathProcessor" class="edu.umd.lib.camel.processors.LdpathProcessor">
-    <property name="query">
-      <value><![CDATA[
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-@prefix fcrepo : <http://fedora.info/definitions/v4/repository#>
-@prefix pcdm : <http://pcdm.org/models#>
-@prefix rdf :  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-@prefix dc : <http://purl.org/dc/elements/1.1/>
-@prefix dcterms : <http://purl.org/dc/terms/>
-@prefix bibo : <http://purl.org/ontology/bibo/>
-@prefix ndnp : <http://chroniclingamerica.loc.gov/terms/>
-@prefix premis : <http://www.loc.gov/premis/rdf/v1#>
-@prefix ebucore : <http://www.ebu.ch/metadata/ontologies/ebucore/ebucore#>
-@prefix carriers : <http://id.loc.gov/vocabulary/carriers/>
-@prefix oa : <http://www.w3.org/ns/oa#>
-@prefix edm: <http://www.europeana.eu/schemas/edm/>
-@prefix fabio: <http://purl.org/spar/fabio/>
-@prefix rel: <http://id.loc.gov/vocabulary/relators/>
-@prefix edm: <http://www.europeana.eu/schemas/edm/>
-@prefix ldp: <http://www.w3.org/ns/ldp#>
-@prefix umdtype: <http://vocab.lib.umd.edu/datatype#>
-@prefix ore: <http://www.openarchives.org/ore/terms/>
-@prefix schema: <https://schema.org/>
-
-id = . :: xsd:string ;
-rdf_type = rdf:type :: xsd:string;
-created = fcrepo:created :: xsd:string;
-created_by = fcrepo:createdBy :: xsd:string;
-last_modified = fcrepo:lastModified :: xsd:string;
-last_modified_by = fcrepo:lastModifiedBy :: xsd:string;
-
-component = edm:hasType/rdfs:label :: xsd:string;
-
-title = dcterms:title[@none] :: xsd:string;
-alt_title = dcterms:alternative[@none] :: xsd:string;
-provider = dc:publisher[@none] :: xsd:string;
-location = dcterms:spatial/rdfs:label[@none] | dc:coverage[@none] :: xsd:string;
-
-title_ja = dcterms:title[@ja] :: xsd:string;
-alt_title_ja = dcterms:alternative[@ja] :: xsd:string;
-provider_ja = dc:publisher[@ja] :: xsd:string;
-location_ja = dc:coverage[@ja] :: xsd:string;
-
-title_ja_latn = dcterms:title[@ja-latn] :: xsd:string;
-alt_title_ja_latn = dcterms:alternative[@ja-latn] :: xsd:string;
-provider_ja_latn = dc:publisher[@ja-latn] :: xsd:string;
-location_ja_latn = dc:coverage[@ja-latn] :: xsd:string;
-
-author = (rel:aut | dcterms:creator)/rdfs:label :: xsd:string;
-author_with_uri = (rel:aut | dcterms:creator)/fn:concat(rdfs:label, "|", owl:sameAs) :: xsd:string;
-
-recipient = bibo:recipient/rdfs:label :: xsd:string;
-recipient_with_uri = bibo:recipient/fn:concat(rdfs:label, "|", owl:sameAs) :: xsd:string;
-
-identifier = dcterms:identifier | dc:identifier :: xsd:string;
-
-date = dc:date | pcdm:memberOf[rdf:type is bibo:Issue]/dc:date :: xsd:string;
-member_of_pcdm_collection = pcdm:memberOf[rdf:type is pcdm:Collection] :: xsd:string;
-member_of_pcdm_object = pcdm:memberOf  [rdf:type is pcdm:Object] :: xsd:string;
-pcdm_files = pcdm:hasFile :: xsd:string;
-pcdm_file_of = pcdm:fileOf :: xsd:string;
-pcdm_members = pcdm:hasMember :: xsd:string;
-pcdm_member_of = pcdm:memberOf :: xsd:string;
-pcdm_related_objects = pcdm:hasRelatedObject :: xsd:string;
-pcdm_related_object_of = pcdm:relatedObjectOf :: xsd:string;
-rdf_type = rdf:type :: xsd:string;
-collection = (pcdm:memberOf|pcdm:fileOf)+[rdf:type is pcdm:Collection] :: xsd:anyURI;
-collection_title_facet = (pcdm:memberOf|pcdm:fileOf)+[rdf:type is pcdm:Collection]/dcterms:title :: xsd:string;
-presentation_set_label = ore:isAggregatedBy/rdfs:label :: xsd:string;
-citation = dcterms:bibliographicCitation :: xsd:string;
-description = dcterms:description :: xsd:string;
-extent = dcterms:extent :: xsd:string;
-
-geoname = fn:first(dcterms:spatial/owl:sameAs, dcterms:spatial) :: xsd:string;
-subject = dcterms:subject/rdfs:label | dc:subject :: xsd:string;
-genre = edm:hasType :: xsd:string;
-rights = dcterms:rights :: xsd:string;
-terms_of_use_text = dcterms:license/rdf:value :: xsd:string;
-copyright_notice = schema:copyrightNotice :: xsd:string;
-
-issue_volume = bibo:volume :: xsd:string;
-issue_issue = bibo:issue :: xsd:string;
-issue_edition = bibo:edition :: xsd:string;
-
-page_number = ndnp:number | .[rdf:type is fabio:Page]/fabio:hasSequenceIdentifier :: xsd:int;
-containing_issue = .[rdf:type is ndnp:Page | rdf:type is fabio:Page | rdf:type is bibo:Article]/pcdm:memberOf :: xsd:string;
-page_reel = pcdm:memberOf[rdf:type is carriers:hd] :: xsd:string;
-page_sequence = ndnp:sequence :: xsd:string;
-
-mime_type = ebucore:hasMimeType | .[rdf:type is oa:TextualBody]/dcterms:format :: xsd:string;
-filename = ebucore:filename :: xsd:string;
-image_height = ebucore:height :: xsd:int;
-image_width = ebucore:width :: xsd:int;
-size = premis:hasSize :: xsd:string;
-digest = premis:hasMessageDigest :: xsd:string;
-
-annotation_target = oa:hasTarget :: xsd:string;
-annotation_source = oa:hasTarget/oa:hasSource :: xsd:string;
-annotation_body = oa:hasBody :: xsd:string;
-annotation_selector = oa:hasTarget/oa:hasSelector :: xsd:string;
-extracted_text = oa:hasBody[rdf:type is oa:TextualBody]/rdf:value | pcdm:hasMember[rdf:type is fabio:Page]/ldp:contains/ldp:contains[rdf:type is oa:Annotation]/oa:hasBody[rdf:type is oa:TextualBody]/rdf:value :: xsd:string;
-annotation_motivation = oa:motivatedBy :: xsd:string;
-resource_selector = oa:hasTarget/oa:hasSelector[rdf:type is oa:FragmentSelector]/rdf:value :: xsd:string;
-
-issue_title_facet = .[rdf:type is bibo:Issue]/dcterms:title | pcdm:memberOf[rdf:type is bibo:Issue]/dcterms:title :: xsd:string;
-handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
-      ]]></value>
-    </property>
-  </bean>
-
   <routeContext xmlns="http://camel.apache.org/schema/spring" id="Solr">
     <route id="edu.umd.lib.camel.routes.queue.index.solr">
       <description>Does initial filtering of event messages to only process resources
       with the RDF types `pcdm:Object`, `pcdm:File`, `pcdm:Collection`, `oa:Annotation`,
-      or `ore:Proxy`. Those event messages are routed to both the new and the legacy
-      Solr indexing processors (Solrizer and LDPath, respectively).</description>
+      or `ore:Proxy`. Those event messages are routed to the Solrizer indexing processor.</description>
       <from uri="activemq:index.solr"/>
       <choice>
         <when>
@@ -147,8 +36,7 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
     </route>
 
     <route id="edu.umd.lib.camel.routes.solr.Distribution">
-      <description>Distribute to the appropriate Solr indexing endpoints based on the
-        routing headers.</description>
+      <description>Distribute to the appropriate Solr indexing endpoint based on the routing headers.</description>
       <from uri="direct:solr.Distribution"/>
       <choice>
         <when>
@@ -158,37 +46,15 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
         <otherwise>
           <log loggingLevel="DEBUG" message="No CamelFcrepoSolrIndexingDestinations header found, using default"/>
           <setHeader headerName="CamelFcrepoSolrIndexingDestinations">
-            <constant>direct:solr.LegacyIndex,direct:solr.Index</constant>
+            <constant>direct:solr.Index</constant>
           </setHeader>
         </otherwise>
       </choice>
       <log loggingLevel="INFO" message="Solr indexing destinations: ${header.CamelFcrepoSolrIndexingDestinations}"/>
       <recipientList ignoreInvalidEndpoints="true" parallelProcessing="true">
-        <description>One or more of: `direct:solr.Index`, `direct:solr.LegacyIndex`</description>
+        <description>One of: `direct:solr.Index`</description>
         <header>CamelFcrepoSolrIndexingDestinations</header>
       </recipientList>
-    </route>
-
-    <route id="edu.umd.lib.camel.routes.solr.LegacyIndex">
-      <description>Main route for adding, updating, or removing resources from the
-        legacy Solr `fedora4` index. Uses a Java LDPath processor to convert the resource's
-        RDF to a JSON Solr document.</description>
-      <from uri="direct:solr.LegacyIndex"/>
-
-      <setHeader headerName="SolrUpdateEndpoint">
-        <simple>${sysenv.LEGACY_SOLR_UPDATE_ENDPOINT}</simple>
-      </setHeader>
-      <choice>
-        <when>
-          <description>delete event</description>
-          <simple>${header.CamelFcrepoEventName} starts with "delete"</simple>
-          <to uri="direct:solr.DeleteFromIndex"/>
-        </when>
-        <otherwise>
-          <to uri="direct:solr.LDPath"/>
-          <to uri="direct:solr.AddToIndex"/>
-        </otherwise>
-      </choice>
     </route>
 
     <route id="edu.umd.lib.camel.routes.solr.Index">
@@ -230,22 +96,6 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
       <to uri="direct:solr.CreateDeleteCommand"/>
       <to uri="direct:solr.SendUpdate"/>
       <log loggingLevel="INFO" message="Removed ${header.CamelFcrepoUri} from ${header.SolrUpdateEndpoint}"/>
-    </route>
-
-    <route id="edu.umd.lib.camel.routes.solr.LDPath">
-      <description>Uses LDPath and the `indexingLDPathProcessor` to transform
-        the resource at the URL constructed from the `REPO_INTERNAL_URL`
-        environment variable and the `CamelFcrepoPath` header.</description>
-      <from uri="direct:solr.LDPath"/>
-
-      <setHeader headerName="CamelHttpUri">
-        <simple>${sysenv.REPO_INTERNAL_URL}${header.CamelFcrepoPath}</simple>
-      </setHeader>
-      <log loggingLevel="INFO" message="Started LDPath processing of ${header.CamelFcrepoUri}"/>
-      <process ref="indexingLDPathProcessor">
-        <description>returns: JSON document</description>
-      </process>
-      <log loggingLevel="INFO" message="Finished LDPath processing of ${header.CamelFcrepoUri}"/>
     </route>
 
     <route id="edu.umd.lib.camel.routes.queue.solrizer">
