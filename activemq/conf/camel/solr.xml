@@ -206,6 +206,16 @@ handle = dcterms:identifier[^^umdtype:handle] :: xsd:string;
           <simple>${header.CamelFcrepoEventName} starts with "delete"</simple>
           <to uri="direct:solr.DeleteFromIndex"/>
         </when>
+        <when>
+          <description>append event</description>
+          <simple>${header.CamelFcrepoUserAgent} contains '(attach)'</simple>
+          <!-- Per LIBFCREPO-1811, we currently ignore events created by the plastron attach
+               command for the purpose of indexing since there is an error where the object
+               and page get deleted from Solr when the new file is added to Solr.
+               See https://umd-dit.atlassian.net/browse/LIBFCREPO-1811 -->
+          <log loggingLevel="WARN" message="Stopping indexing for ${header.CamelFcrepoUri} on attach event due to LIBFCREPO-1811 bug"/>
+          <stop/>
+        </when>
         <otherwise>
           <description>any other event</description>
           <to uri="activemq:solrizer"/>
