@@ -207,6 +207,11 @@
     -->
     <route id="edu.umd.lib.camel.routes.BinaryDistribution">
       <from uri="direct:BinaryDistribution"/>
+      <filter>
+        <simple>${header.CamelFcrepoEventName} == "delete binary"</simple>
+        <log loggingLevel="DEBUG" message="Halting binary distribution for deleted binary ${header.CamelFcrepoUri}"/>
+        <stop/>
+      </filter>
       <multicast parallelProcessing="true">
         <pipeline>
           <removeHeaders pattern="CamelHttp*"/>
