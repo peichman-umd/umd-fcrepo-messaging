@@ -137,7 +137,7 @@
       <multicast parallelProcessing="true">
         <to uri="direct:fixity.CreateLogfileEntry"/>
         <to uri="direct:fixity.CreateAuditRecord"/>
-        <to uri="direct:fixity.Notify"/>
+        <to uri="direct:fixity.SendFailureNotification"/>
       </multicast>
     </route>
 
