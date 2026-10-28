@@ -7,6 +7,12 @@
 # where <VERSION> is the Docker image version to create.
 FROM maven:3.8.6-eclipse-temurin-11 AS dependencies
 
+# remove vulnerable CA certs (see: https://ops.java/emudhra)
+RUN keytool -delete -cacerts -alias "emsignrootcag1 [jdk]" && \
+    keytool -delete -cacerts -alias "emsignrootcag2 [jdk]" && \
+    keytool -delete -cacerts -alias "emsigneccrootcag3 [jdk]" && \
+    keytool -delete -cacerts -alias "comodoaaaca [jdk]"
+
 RUN mkdir -p /var/jars
 COPY pom.xml /var/jars
 WORKDIR /var/jars
@@ -20,6 +26,12 @@ FROM openjdk:8u312-jdk-bullseye
 
 ENV ACTIVEMQ_VERSION=5.16.7
 ENV ACTIVEMQ_URL=http://archive.apache.org/dist/activemq/${ACTIVEMQ_VERSION}/apache-activemq-${ACTIVEMQ_VERSION}-bin.tar.gz
+
+# remove vulnerable CA certs (see: https://ops.java/emudhra)
+RUN keytool -delete -keystore $JAVA_HOME/jre/lib/security/cacerts -alias "emsignrootcag1 [jdk]" && \
+    keytool -delete -keystore $JAVA_HOME/jre/lib/security/cacerts -alias "emsignrootcag2 [jdk]" && \
+    keytool -delete -keystore $JAVA_HOME/jre/lib/security/cacerts -alias "emsigneccrootcag3 [jdk]" && \
+    keytool -delete -keystore $JAVA_HOME/jre/lib/security/cacerts -alias "comodoaaaca [jdk]"
 
 # Download and install ActiveMQ.
 # We need to run this as three separate commands instead of a single
